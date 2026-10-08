@@ -1,0 +1,23 @@
+/* Pacotes: mesma composição da referência, com capas fornecidas pelo usuário. */
+.packages-section{scroll-margin-top:100px}
+.package-filters{align-items:stretch}
+.packages-section .catalog-heading{margin-bottom:36px}
+.package-results{margin-top:18px;margin-bottom:56px;color:#87818b;font-size:11px;min-height:17px}
+.package-card{background:linear-gradient(165deg,#19131c80,#28152b12)}
+.package-deal{display:block;min-height:29px;padding:4px 10px;text-align:center;background:var(--gradient);font-size:13px;font-weight:600;color:white;line-height:21px}
+.package-card .product-image-button{border-radius:0}
+.product-tags .tag-license-protected{background:#23245c;color:#b4bafa}
+.product-tags .tag-license-open{background:#3b2b18;color:#e3bc72}
+.product-tags .tag-package-count{background:#3b203b;color:#e9a3d8}
+.package-savings{font-size:13px;line-height:1.7;color:#c99aeb;margin-top:8px}
+.package-savings s{color:#9a8ca4;margin-right:8px}
+.package-includes{margin-top:28px;padding:22px;border:1px solid #382d41;border-radius:12px;background:#17121c}
+.package-includes h3{margin-bottom:8px}
+.package-includes>p{font-size:13px;line-height:1.8;color:#a49aab;margin-bottom:18px}
+.package-includes ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.package-includes li button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#201827;border:1px solid #493151;border-radius:8px;padding:12px 14px;text-align:left;font-size:14px}
+.package-includes li button:hover{background:#302037;border-color:#a467ca}
+.package-includes li button span{color:#c493e1;flex-shrink:0}
+.package-includes li button strong{font-weight:500;overflow-wrap:anywhere}
+@media(max-width:760px){.package-results{margin-bottom:30px}.package-filters button{padding-inline:9px;font-size:12px}.package-deal{font-size:11px;line-height:18px;min-height:26px}.package-includes{padding:16px}.package-includes ul{grid-template-columns:1fr}}
+@media(max-width:575px){.package-card .product-title-row h3,.package-card .product-price{font-size:18px}.package-deal{font-size:12px}.packages-section .catalog-heading{margin-bottom:25px}}

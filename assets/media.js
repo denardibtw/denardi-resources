@@ -83,7 +83,7 @@
   function slides(product) {
     const videoItems = videos(product).map((item, index) => ({ ...item, type: "video", title: item.title || (index === 0 ? "Apresentação do resource" : `Vídeo adicional ${index}`) }));
     const imageItems = images(product);
-    if (!imageItems.length) imageItems.push({ type: "image", src: "", title: "Imagens do resource", alt: "" });
+    if (!imageItems.length) imageItems.push({ type: "image", src: "", title: `Imagens do ${product.kind === "package" ? "pacote" : "resource"}`, alt: "" });
     // Avançar a partir do vídeo principal leva diretamente às imagens.
     return videoItems.length ? [videoItems[0], ...imageItems, ...videoItems.slice(1)] : imageItems;
   }
@@ -130,7 +130,7 @@
       });
       caption.textContent = item.title;
       if (item.type === "image") {
-        panel.innerHTML = item.src ? `<img class="media-image" src="${escape(item.src)}" alt="${escape(item.alt)}" width="960" height="540" loading="lazy" decoding="async">` : '<span class="media-no-image">Imagens do resource em breve</span>';
+        panel.innerHTML = item.src ? `<img class="media-image" src="${escape(item.src)}" alt="${escape(item.alt)}" width="960" height="540" loading="lazy" decoding="async">` : `<span class="media-no-image">Imagens do ${product.kind === "package" ? "pacote" : "resource"} em breve</span>`;
         return;
       }
       external.href = item.source.original; external.hidden = false;

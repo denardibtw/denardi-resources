@@ -12,6 +12,7 @@
 window.STORE_CONFIG = {
   name: "Denardi Dev - Resources MTA:SA",
   catalogTitle: "Scripts",
+  packagesTitle: "Pacotes",
   pageTitle: "Denardi Dev - Resources MTA:SA",
   description: "Vitrine de resources para MTA:SA. Explore o catálogo e fale com o criador para comprar.",
   demoMode: true,
@@ -37,6 +38,83 @@ window.STORE_CATEGORIES = [
   { id: "sistemas", name: "Sistemas", icon: "layers" },
   { id: "veiculos", name: "Veículos", icon: "car" },
   { id: "mapas", name: "Mapas", icon: "map" },
+];
+
+/* PACOTES DEMONSTRATIVOS. Troque nomes, preço, licença e IDs pelos seus dados reais.
+ * includedProducts reúne IDs de STORE_PRODUCTS. A economia é calculada pelo site.
+ * license: "protected" (Código protegido) ou "open" (Código aberto).
+ * image/images/videoUrl/extraVideos funcionam como nos resources individuais.
+ * As licenças abaixo são exemplos de filtro, não condições reais de venda.
+ */
+window.STORE_PACKAGES = [
+  {
+    id: "interfaces", name: "Pacote Interfaces", price: 119.90, license: "open",
+    includedProducts: ["hud-essentials", "login-flow"],
+    image: "", imageAlt: "", images: [],
+    description: "Uma proposta de identidade visual para a entrada e a experiência do jogador.",
+    longDescription: "Pacote demonstrativo que reúne HUD Essentials e Login Flow. A combinação ilustra como apresentar várias interfaces em uma única oferta. As integrações e condições devem ser substituídas pelas informações reais dos seus resources.",
+    features: ["HUD e tela de entrada reunidos", "Possibilidades de personalização a confirmar"],
+    requirements: ["Confira os requisitos de cada resource incluído", "Compatibilidade entre os resources a confirmar"],
+    delivery: "Exemplo de pacote. Confirme arquivos, licença de código aberto, instalação e suporte com denardi.",
+    videoUrl: "./assets/videos/hud-demo.webm", videoTitle: "HUD do pacote · demonstração ilustrativa", videoCaptions: "./assets/videos/demo-pt.vtt",
+    extraVideos: [], version: "1.0 · exemplo",
+  },
+  {
+    id: "roleplay", name: "Pacote Roleplay", price: 299.90, license: "protected",
+    includedProducts: ["inventario-grid", "city-bank", "garage-studio"],
+    image: "", imageAlt: "", images: [],
+    description: "Inventário, economia e garagem reunidos em uma apresentação para seu servidor.",
+    longDescription: "Oferta demonstrativa com Inventário Grid, City Bank e Garage Studio. Mostra como agrupar recursos ligados à rotina de um servidor roleplay. Não representa um pacote real nem uma integração já disponível; personalize com as funções verdadeiras.",
+    features: ["Três propostas de sistemas em uma oferta", "Integração com o gamemode a definir"],
+    requirements: ["Confira os requisitos dos três resources", "Sistema de contas e persistência a confirmar"],
+    delivery: "Exemplo de pacote. Confirme licença de código protegido, arquivos, dependências e suporte.",
+    videoUrl: "./assets/videos/inventory-demo.webm", videoTitle: "Inventário do pacote · demonstração ilustrativa", videoCaptions: "./assets/videos/demo-pt.vtt",
+    extraVideos: [], version: "1.0 · exemplo",
+  },
+  {
+    id: "servidor", name: "Pacote Servidor", price: 479.90, license: "protected",
+    includedProducts: ["hud-essentials", "inventario-grid", "garage-studio", "login-flow", "city-bank", "district-map"],
+    image: "", imageAlt: "", images: [],
+    description: "Uma coleção de interfaces, sistemas e mapa para apresentar sua oferta mais completa.",
+    longDescription: "Coleção demonstrativa dos seis resources deste catálogo. Use este exemplo para organizar uma oferta maior, indicando com clareza o que está incluído, as dependências e as condições de uso. Não há promessa de compatibilidade automática entre estes exemplos.",
+    features: ["Seis resources demonstrativos reunidos", "Escopo e instalação a confirmar"],
+    requirements: ["Requisitos de todos os resources incluídos", "Compatibilidade conjunta a validar com o criador"],
+    delivery: "Exemplo de pacote. Informe os arquivos, licença, prazo e condições reais de entrega.",
+    videoUrl: "", extraVideos: [], version: "1.0 · exemplo",
+  },
+  {
+    id: "economia", name: "Pacote Economia", price: 199.90, license: "open",
+    includedProducts: ["inventario-grid", "city-bank"],
+    image: "", imageAlt: "", images: [],
+    description: "Itens e interface bancária em uma proposta de sistemas para roleplay.",
+    longDescription: "Pacote demonstrativo com Inventário Grid e City Bank. A lista de componentes ajuda o visitante a avaliar uma oferta conjunta. Valores, funcionalidades e licença de código aberto são exemplos e precisam refletir seus produtos reais.",
+    features: ["Inventário e banco reunidos", "Regras de economia a definir"],
+    requirements: ["Sistema de itens e economia a integrar", "Persistência e validações a confirmar"],
+    delivery: "Exemplo: dois resources e instruções. Confirme licença, integração e suporte antes de comprar.",
+    videoUrl: "", extraVideos: [], version: "1.0 · exemplo",
+  },
+  {
+    id: "cidade", name: "Pacote Cidade", price: 179.90, license: "protected",
+    includedProducts: ["garage-studio", "district-map"],
+    image: "", imageAlt: "", images: [],
+    description: "Garagem e ambientação urbana para apresentar novas possibilidades no servidor.",
+    longDescription: "Combinação demonstrativa de Garage Studio e District Map. Substitua por seus resources e informe as áreas do mapa, os sistemas de veículos e as integrações necessárias. As capas serão adicionadas por você.",
+    features: ["Garagem e mapa reunidos", "Compatibilidade com o cenário a definir"],
+    requirements: ["Sistema de veículos a integrar", "Compatibilidade com outros mapas a confirmar"],
+    delivery: "Exemplo de pacote. Confirme arquivos do mapa, licença, dependências e instalação.",
+    videoUrl: "", extraVideos: [], version: "1.0 · exemplo",
+  },
+  {
+    id: "inicial", name: "Pacote Inicial", price: 229.90, license: "open",
+    includedProducts: ["hud-essentials", "login-flow", "inventario-grid"],
+    image: "", imageAlt: "", images: [],
+    description: "Entrada, HUD e inventário em uma coleção demonstrativa de três resources.",
+    longDescription: "Exemplo de oferta com HUD Essentials, Login Flow e Inventário Grid. Personalize a composição e descreva a experiência real de cada componente antes de divulgar este pacote. A economia exibida compara os preços demonstrativos do catálogo.",
+    features: ["Três propostas de interface e sistema", "Personalização de marca a confirmar"],
+    requirements: ["Integração com contas e sistema de itens", "Confira os requisitos individuais antes da compra"],
+    delivery: "Exemplo de pacote. Confirme código aberto, arquivos entregues, instalação e suporte.",
+    videoUrl: "", extraVideos: [], version: "1.0 · exemplo",
+  },
 ];
 
 window.STORE_PRODUCTS = [

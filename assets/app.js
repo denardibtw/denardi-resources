@@ -3,15 +3,18 @@
   const config = window.STORE_CONFIG;
   const categories = window.STORE_CATEGORIES;
   const products = window.STORE_PRODUCTS;
+  const packages = (window.STORE_PACKAGES || []).map((item) => ({ ...item, kind: "package", category: "pacotes" }));
   const $ = (selector) => document.querySelector(selector);
   const grid = $("#product-grid");
   const dialog = $("#product-dialog");
   const infoDialog = $("#info-dialog");
   const state = { category: "all", query: "", sort: "featured", presentation: "all" };
+  const packageState = { query: "", license: "all" };
   const homeSettings = config.home || {};
   const homeProduct = products.find((product) => product.id === homeSettings.highlightProductId) || products.find((product) => window.StoreMedia.videos(product).length) || products[0];
-  let currentPage = /^(#catalogo|#categorias|#resource\/)/.test(location.hash) ? "catalog" : "home";
-  let productReturnHash = currentPage === "home" ? "#inicio" : "#catalogo";
+  const pageHash = (page) => ({ home: "#inicio", catalog: "#catalogo", packages: "#pacotes" })[page];
+  let currentPage = /^(#pacotes|#pacote\/)/.test(location.hash) ? "packages" : /^(#catalogo|#categorias|#resource\/)/.test(location.hash) ? "catalog" : "home";
+  let productReturnHash = pageHash(currentPage);
   let activeProduct = null;
   let restoreFocus = null;
   let toastTimeout;
@@ -19,6 +22,16 @@
   const escape = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
   const normalize = (value) => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   const categoryName = (id) => categories.find((category) => category.id === id)?.name || id;
+  const licenseName = (license) => ({ open: "Código aberto", protected: "Código protegido" })[license] || "Licença a confirmar";
+  const findProduct = (id, kind = "resource") => (kind === "package" ? packages : products).find((item) => item.id === id);
+  const productLabel = (product) => product.kind === "package" ? "pacote" : "resource";
+  function packageComponents(product) {
+    return [...new Set(product.includedProducts || [])].map((id) => products.find((item) => item.id === id)).filter(Boolean);
+  }
+  function packagePricing(product) {
+    const total = packageComponents(product).reduce((sum, item) => sum + item.price, 0);
+    return { total, savings: Math.max(0, Math.round((total - product.price) * 100) / 100) };
+  }
   const iconPaths = {
     grid: '<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/>',
     layout: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/>',
@@ -46,9 +59,9 @@
       : `<strong class="discord-profile">${username}</strong>`;
     return `<div class="discord-contact"><div class="discord-contact-heading">${icon("discord")}<span>Discord</span></div>${profile}${config.discordId ? `<p class="discord-contact-id">id: ${escape(config.discordId)}</p>` : ""}</div>`;
   }
-  function productLink(id) {
+  function productLink(product) {
     const url = new URL(location.href);
-    url.hash = `resource/${encodeURIComponent(id)}`;
+    url.hash = `${productLabel(product)}/${encodeURIComponent(product.id)}`;
     return url.href;
   }
   document.querySelectorAll("[data-brand]").forEach((element) => { element.textContent = config.name; });
@@ -57,6 +70,8 @@
   $("meta[name='description']").content = config.description;
   $("#year").textContent = new Date().getFullYear();
   $("#catalog-title").textContent = config.catalogTitle || "Scripts";
+  $("#packages-title").textContent = config.packagesTitle || "Pacotes";
+  document.querySelectorAll("[data-package-demo]").forEach((el) => { el.hidden = !config.demoMode; });
   document.querySelectorAll("[data-icon]").forEach((element) => { element.innerHTML = icon(element.dataset.icon); });
   if (!config.demoMode) ["#demo-banner", "#catalog-demo-note", "#demo-faq", "#footer-demo"].forEach((selector) => { $(selector).hidden = true; });
   $("#store-discord-contact").innerHTML = discordContact();
@@ -79,19 +94,32 @@
   }
   function productCard(product) {
       const hasVideo = window.StoreMedia.videos(product).length > 0;
-      return `<article class="product-card" data-category="${escape(product.category)}">
-        <button class="product-image-button" data-product="${escape(product.id)}" data-play="${hasVideo}" aria-label="${hasVideo ? "Assistir à apresentação" : "Ver detalhes"} de ${escape(product.name)}">
+      const isPackage = product.kind === "package";
+      const attr = `${isPackage ? "data-package" : "data-product"}="${escape(product.id)}"`;
+      const pricing = isPackage && packagePricing(product);
+      return `<article class="product-card${isPackage ? " package-card" : ""}" data-category="${escape(product.category)}">
+        ${isPackage ? `<span class="package-deal">${pricing.savings > 0 ? `Pacote · Economize ${money.format(pricing.savings)}` : "Disponível como pacote"}</span>` : ""}
+        <button class="product-image-button" ${attr} data-play="${hasVideo}" aria-label="${hasVideo ? "Assistir à apresentação" : "Ver detalhes"} de ${escape(product.name)}">
           ${window.StoreMedia.thumbnail(product)}
           <span class="image-labels">${product.badge ? `<span class="product-badge">${escape(product.badge)}</span>` : ""}${config.demoMode ? '<span class="demo-badge">DEMO</span>' : ""}</span>
           ${hasVideo ? `<span class="product-watch-badge"><span>${window.StoreMedia.playIcon}</span><span>Assistir à apresentação</span></span>` : ""}
         </button>
         <div class="product-body">
-          <div class="product-title-row"><h3><button data-product="${escape(product.id)}">${escape(product.name)}</button></h3><p class="product-price">${money.format(product.price)}</p></div>
-          <div class="product-tags"><span class="tag-${escape(product.category)}">${escape(categoryName(product.category))}</span><span class="tag-mta">MTA:SA</span>${hasVideo ? `<span class="tag-video">${window.StoreMedia.playIcon} Vídeo</span>` : ""}${config.demoMode ? '<span class="tag-demo">Demo</span>' : ""}</div>
+          <div class="product-title-row"><h3><button ${attr}>${escape(product.name)}</button></h3><p class="product-price">${money.format(product.price)}</p></div>
+          <div class="product-tags">${isPackage ? `<span class="tag-license-${escape(product.license)}">${escape(licenseName(product.license))}</span><span class="tag-package-count">${packageComponents(product).length} resources</span>` : `<span class="tag-${escape(product.category)}">${escape(categoryName(product.category))}</span>`}<span class="tag-mta">MTA:SA</span>${hasVideo ? `<span class="tag-video">${window.StoreMedia.playIcon} Vídeo</span>` : ""}${config.demoMode ? '<span class="tag-demo">Demo</span>' : ""}</div>
           <p class="product-description">${escape(product.longDescription || product.description)}</p>
-          <div class="product-bottom"><button class="details-button" data-product="${escape(product.id)}" aria-label="Ver detalhes de ${escape(product.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l1 14H4Zm3 0V5a4 4 0 0 1 8 0v2M9 12h6"/></svg>Ver produto</button></div>
+          <div class="product-bottom"><button class="details-button" ${attr} aria-label="Ver detalhes de ${escape(product.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l1 14H4Zm3 0V5a4 4 0 0 1 8 0v2M9 12h6"/></svg>Ver ${isPackage ? "pacote" : "produto"}</button></div>
         </div>
       </article>`;
+  }
+  function renderPackages() {
+    const query = normalize(packageState.query.trim());
+    const filtered = packages.filter((product) => (packageState.license === "all" || product.license === packageState.license)
+      && normalize([product.name, product.description, licenseName(product.license), ...packageComponents(product).map((item) => item.name)].join(" ")).includes(query));
+    $("#package-results").textContent = `${filtered.length} ${filtered.length === 1 ? "pacote" : "pacotes"} na coleção`;
+    $("#package-empty-state").hidden = filtered.length > 0;
+    $("#package-grid").hidden = !filtered.length;
+    $("#package-grid").innerHTML = filtered.map(productCard).join("");
   }
   function renderHomeMedia() {
     const root = $("#home-feature-media");
@@ -166,8 +194,9 @@
     currentPage = page;
     $("#home-page").hidden = page !== "home";
     $("#catalogo").hidden = page !== "catalog";
+    $("#pacotes").hidden = page !== "packages";
     document.body.classList.toggle("home-view", page === "home");
-    $("#main-nav").querySelectorAll("a").forEach((link) => { const active = link.getAttribute("href") === (page === "home" ? "#inicio" : "#catalogo"); link.classList.toggle("active", active); if (active) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current"); });
+    $("#main-nav").querySelectorAll("a").forEach((link) => { const active = link.getAttribute("href") === pageHash(page); link.classList.toggle("active", active); if (active) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current"); });
   }
   $("#category-filters").addEventListener("click", (event) => {
     const button = event.target.closest("[data-category]");
@@ -194,32 +223,50 @@
   });
   $("#search").addEventListener("input", (event) => { state.query = event.target.value; render(); });
   $("#sort").addEventListener("change", (event) => { state.sort = event.target.value; render(); });
+  $("#package-search").addEventListener("input", (event) => { packageState.query = event.target.value; renderPackages(); });
+  $("#package-filters").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-package-license]");
+    if (!button) return;
+    packageState.license = button.dataset.packageLicense;
+    $("#package-filters").querySelectorAll("button").forEach((tab) => { const active = tab === button; tab.classList.toggle("active", active); tab.setAttribute("aria-pressed", String(active)); });
+    renderPackages();
+  });
+  $("#reset-package-filters").addEventListener("click", () => {
+    packageState.query = ""; $("#package-search").value = "";
+    $("#package-filters [data-package-license='all']").click(); $("#package-search").focus();
+  });
   function resetCatalogFilters() {
     state.query = ""; state.sort = "featured"; $("#search").value = ""; $("#sort").value = "featured";
     $("#presentation-filters [data-presentation='all']").click(); $("#category-filters [data-category='all']").click();
   }
   $("#reset-filters").addEventListener("click", () => { resetCatalogFilters(); $("#search").focus(); });
-  function showProduct(id, trigger, autoPlay = false) {
-    const product = products.find((item) => item.id === id);
+  function showProduct(id, trigger, autoPlay = false, kind = "resource") {
+    const product = findProduct(id, kind);
     if (!product) return;
     stopHomeVideo();
     window.StoreMedia.stop();
     activeProduct = product;
-    if (trigger) restoreFocus = trigger;
+    if (trigger && !dialog.open) restoreFocus = trigger;
+    const isPackage = product.kind === "package";
+    const components = isPackage ? packageComponents(product) : [];
+    const pricing = isPackage && packagePricing(product);
+    const label = productLabel(product);
     const list = (items) => (items || []).map((item) => `<li>${escape(item)}</li>`).join("");
-    $("#product-detail").innerHTML = `<p class="detail-breadcrumb"><span>Scripts</span><span aria-hidden="true">›</span><span>${escape(product.name)}</span></p>
+    $("#product-detail").innerHTML = `<p class="detail-breadcrumb"><span>${isPackage ? "Pacotes" : "Scripts"}</span><span aria-hidden="true">›</span><span>${escape(product.name)}</span></p>
       <div class="detail-top">
-        ${window.StoreMedia.html({ ...product, categoryLabel: categoryName(product.category) })}
+        ${window.StoreMedia.html({ ...product, categoryLabel: isPackage ? "Pacotes" : categoryName(product.category) })}
         <aside class="detail-summary">
-          <div class="detail-tags"><span>${escape(categoryName(product.category))}</span><span>MTA:SA</span>${config.demoMode ? '<span>Demo</span>' : ""}</div>
+          <div class="detail-tags"><span>${escape(isPackage ? licenseName(product.license) : categoryName(product.category))}</span><span>MTA:SA</span>${config.demoMode ? '<span>Demo</span>' : ""}</div>
           <h2 id="detail-title">${escape(product.name)}</h2>
           <div class="detail-price-row"><span class="detail-price">${money.format(product.price)}</span><small>${config.demoMode ? "Valor demonstrativo · confirme as condições" : "Confirme as condições de compra"}</small></div>
+          ${isPackage && pricing.savings > 0 ? `<p class="package-savings"><s>${money.format(pricing.total)} em resources avulsos</s><br>Economize ${money.format(pricing.savings)}${config.demoMode ? " · exemplo" : ""}</p>` : ""}
           ${discordContact()}
           <div class="detail-contact-note"><h3>Vamos conversar?</h3><p>Confirme compatibilidade, licença, entrega e suporte diretamente com o criador.</p></div>
-          <div class="detail-share"><button id="share-product">Copiar link do resource ↗</button><small>${escape(product.version || "")}</small></div>
+          <div class="detail-share"><button id="share-product">Copiar link do ${label} ↗</button><small>${escape(product.version || "")}</small></div>
         </aside>
       </div>
-      <section class="detail-description"><h3>Conheça o resource</h3><p class="detail-long-description">${escape(product.longDescription || product.description)}</p>
+      <section class="detail-description"><h3>Conheça o ${label}</h3><p class="detail-long-description">${escape(product.longDescription || product.description)}</p>
+        ${isPackage ? `<section class="package-includes"><h3>Resources incluídos</h3><p>${config.demoMode ? "Composição demonstrativa. " : ""}Confira cada componente e confirme a compatibilidade do conjunto com denardi.</p><ul>${components.map((item) => `<li><button data-product="${escape(item.id)}" aria-label="Ver resource ${escape(item.name)}"><strong>${escape(item.name)}</strong><span aria-hidden="true">↗</span></button></li>`).join("")}</ul></section>` : ""}
         <div class="detail-info-grid"><div><h3>${config.demoMode ? "Funcionalidades de exemplo" : "Funcionalidades"}</h3><ul>${list(product.features)}</ul></div><div><h3>Requisitos e compatibilidade</h3><ul>${list(product.requirements)}</ul></div><div><h3>Sobre a entrega</h3><p class="detail-delivery">${escape(product.delivery)}</p></div></div>
       </section>`;
     if (!dialog.open) { dialog.showModal(); document.body.classList.add("modal-open"); }
@@ -227,27 +274,30 @@
     window.StoreMedia.mount($("[data-media-gallery]"), product, autoPlay);
   }
   function syncHash(trigger = null) {
-    if (location.hash.startsWith("#resource/")) {
+    if (/^#(resource|pacote)\//.test(location.hash)) {
       let id;
-      try { id = decodeURIComponent(location.hash.slice(10)); } catch { return; }
-      if (products.some((product) => product.id === id)) showProduct(id, trigger);
-      else { if (dialog.open) dialog.close(); toast("Este resource não está mais no catálogo."); }
+      const kind = location.hash.startsWith("#pacote/") ? "package" : "resource";
+      try { id = decodeURIComponent(location.hash.split("/").slice(1).join("/")); } catch { return; }
+      if (findProduct(id, kind)) showProduct(id, trigger, false, kind);
+      else { if (dialog.open) dialog.close(); toast("Este produto não está mais no catálogo."); }
     } else {
       if (dialog.open) dialog.close();
       if (["#catalogo", "#categorias"].includes(location.hash)) showPage("catalog");
+      else if (location.hash === "#pacotes") { showPage("packages"); window.scrollTo({ top: 0, behavior: "instant" }); }
       else if (["", "#inicio"].includes(location.hash)) showPage("home");
     }
   }
-  function openFromClick(id, trigger, autoPlay = false) {
-    if (!products.some((product) => product.id === id)) return;
-    if (!dialog.open) productReturnHash = location.hash.startsWith("#resource/") ? (currentPage === "home" ? "#inicio" : "#catalogo") : location.hash || "#inicio";
-    const hash = `#resource/${encodeURIComponent(id)}`;
+  function openFromClick(id, trigger, autoPlay = false, kind = "resource") {
+    const product = findProduct(id, kind);
+    if (!product) return;
+    if (!dialog.open) productReturnHash = /^#(resource|pacote)\//.test(location.hash) ? pageHash(currentPage) : location.hash || "#inicio";
+    const hash = `#${productLabel(product)}/${encodeURIComponent(id)}`;
     if (location.hash !== hash) history.pushState({ product: id }, "", hash);
-    showProduct(id, trigger, autoPlay);
+    showProduct(id, trigger, autoPlay, kind);
   }
   function closeProduct() {
     window.StoreMedia.stop();
-    if (location.hash.startsWith("#resource/")) history.replaceState(null, "", `${location.pathname}${location.search}${productReturnHash}`);
+    if (/^#(resource|pacote)\//.test(location.hash)) history.replaceState(null, "", `${location.pathname}${location.search}${productReturnHash}`);
     if (dialog.open) dialog.close();
   }
   function toast(message) {
@@ -259,7 +309,7 @@
   }
   async function copyProduct() {
     if (!activeProduct) return;
-    const value = productLink(activeProduct.id);
+    const value = productLink(activeProduct);
     try {
       if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(value);
       else {
@@ -268,7 +318,7 @@
         dialog.append(input); input.select();
         const copied = document.execCommand("copy"); input.remove(); if (!copied) throw new Error("copy unavailable");
       }
-      toast("Link do resource copiado!");
+      toast(`Link do ${productLabel(activeProduct)} copiado!`);
     } catch { toast("Não foi possível copiar. Copie o endereço da barra do navegador."); }
   }
   document.addEventListener("click", (event) => {
@@ -295,6 +345,8 @@
       $("#search").value = ""; state.query = ""; $("[data-category='all']").click(); $("[data-presentation='video']").click();
       return;
     }
+    const packageButton = event.target.closest("[data-package]");
+    if (packageButton) { openFromClick(packageButton.dataset.package, packageButton, packageButton.dataset.play === "true", "package"); return; }
     const productButton = event.target.closest("[data-product]");
     if (productButton) { openFromClick(productButton.dataset.product, productButton, productButton.dataset.play === "true"); return; }
     if (event.target.closest("#share-product")) { copyProduct(); return; }
@@ -313,7 +365,7 @@
       if (!dialog.open && !infoDialog.open) document.body.classList.remove("modal-open");
       if (element === dialog) {
         window.StoreMedia.stop();
-        if (location.hash.startsWith("#resource/")) history.replaceState(null, "", `${location.pathname}${location.search}${productReturnHash}`);
+        if (/^#(resource|pacote)\//.test(location.hash)) history.replaceState(null, "", `${location.pathname}${location.search}${productReturnHash}`);
         if (restoreFocus?.isConnected) restoreFocus.focus({ preventScroll: true });
         restoreFocus = null; activeProduct = null;
       }
@@ -331,5 +383,5 @@
     placeholder.textContent = "Thumbnail indisponível";
     img.replaceWith(placeholder);
   }, true);
-  render(); renderHome(); showPage(currentPage); syncHash();
+  render(); renderPackages(); renderHome(); showPage(currentPage); syncHash();
 })();
