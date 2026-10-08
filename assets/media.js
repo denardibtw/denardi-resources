@@ -64,7 +64,7 @@
     } catch { return ""; }
   }
   function videos(product) {
-    const entries = [{ url: product.videoUrl, title: product.videoTitle || "Apresentação do resource", poster: product.videoPoster, captions: product.videoCaptions }, ...(product.extraVideos || [])];
+    const entries = [{ url: product.videoUrl, title: product.videoTitle || "Apresentação do produto", poster: product.videoPoster, captions: product.videoCaptions }];
     return entries.map((entry) => ({ ...entry, source: resolveSource(entry.url), poster: entry.poster || product.image || "", captions: safeCaption(entry.captions) })).filter((entry) => entry.source);
   }
   function images(product) {
