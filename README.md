@@ -48,13 +48,13 @@ Como o Pages serve arquivos públicos, a tela de entrada não torna o código ou
 4. Em **Repository permissions**, configure **Contents: Read and write**. **Metadata** permanece somente leitura. Não precisa permitir edição de workflows.
 5. Crie o token por conta própria. Cole-o somente na tela de entrada do painel; não envie pelo chat.
 6. Clique em **Entrar no painel**. O campo é limpo ao iniciar a verificação. Edite, confira a prévia e use **Publicar → Publicar no GitHub** quando estiver pronto.
-7. O painel confirma o envio e oferece um link para **Actions**. Aguarde **Publicar vitrine no GitHub Pages** concluir e abra a loja.
+7. O painel confirma o envio e aguarda a versão correspondente aparecer no site público. Quando concluir, mostra **Publicação concluída** e o link **Ver loja atualizada**. Enquanto isso, o link de **Actions** permite acompanhar o andamento.
 
 [Guia oficial de tokens do GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
 Catálogo e imagens são enviados em uma única atualização. Os demais arquivos são preservados. Se o catálogo mudou em outra sessão, o painel interrompe a publicação para evitar sobrescrever alterações. Exporte seu rascunho, use **Carregar versão publicada** e reaplique as mudanças. Carregar a versão publicada pede confirmação quando houver um rascunho diferente da base.
 
-Se o token expirou ou não tem acesso, prepare outro e entre novamente. Se o envio terminou mas o site ainda não mudou, confira **Actions**: enviar ao repositório e concluir o deploy são etapas diferentes. O token não permanece depois de sair ou recarregar a página.
+Se o token expirou ou não tem acesso, prepare outro e entre novamente. Enviar ao repositório e concluir o deploy são etapas diferentes. O painel confere o site por até dois minutos; se o processo demorar mais, informa que o catálogo está salvo e orienta acompanhar **Actions**. Não é necessário publicar repetidamente. O token não permanece depois de sair ou recarregar a página.
 
 ### Backup e alternativa sem token
 
@@ -101,13 +101,13 @@ Para publicar uma cópia em outro repositório:
 5. Em **Actions**, abra **Publicar vitrine no GitHub Pages** e execute **Run workflow**. As próximas alterações em `main` iniciam o deploy.
 6. Espere concluir e consulte o endereço em **Settings → Pages**.
 
-O workflow publica `index.html`, `admin.html`, `.nojekyll` e todo `assets/`. Os caminhos relativos funcionam em subpastas como `https://USUARIO.github.io/REPOSITORIO/`.
+O workflow publica `index.html`, `admin.html`, `.nojekyll` e todo `assets/`. Ele inclui a versão do catálogo nos caminhos de `data.js` para que o navegador carregue os dados novos após cada deploy, e registra essa versão para o painel confirmar a conclusão. Os caminhos relativos funcionam em subpastas como `https://USUARIO.github.io/REPOSITORIO/`.
 
 Para outro repositório, ajuste proprietário/repositório/branch em `assets/admin-github.js`, os links e identificação em `admin.html` e este guia. Se a branch não for `main`, ajuste o workflow.
 
 [Criação de um site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site), [workflows oficiais](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
-Alternativa: use **Settings → Pages → Deploy from a branch → main → /(root)**, enviando os arquivos públicos e `.nojekyll`. Não use simultaneamente essa opção e o workflow personalizado.
+Alternativa: use **Settings → Pages → Deploy from a branch → main → /(root)**, enviando os arquivos públicos e `.nojekyll`. Essa opção não executa o preparo de versões nem a confirmação automática incluídos no workflow; confira o resultado manualmente. Não use simultaneamente essa opção e o workflow personalizado.
 
 ## Personalização por arquivos
 
@@ -155,6 +155,7 @@ denardi-resources/
     ├── styles.css / home.css / packages.css / media.css / sold.css
     ├── admin.js / admin.css
     ├── admin-model.js / admin-storage.js / admin-github.js / admin-session.js / admin-zip.js
+    ├── admin-deployment.js
     ├── store-preview.js
     ├── img/
     └── videos/
