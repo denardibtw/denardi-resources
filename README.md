@@ -1,277 +1,158 @@
 # Denardi Resources
 
-**Site:** https://denardibtw.github.io/denardi-resources/  
+**Loja:** https://denardibtw.github.io/denardi-resources/  
+**Painel:** https://denardibtw.github.io/denardi-resources/admin.html  
 **Repositório:** https://github.com/denardibtw/denardi-resources
 
-O endereço do GitHub Pages acompanha o novo nome do repositório. Compartilhe o link acima; o antigo endereço `/denardidev/` não redireciona automaticamente no Pages. O projeto usa caminhos relativos e continua funcionando em qualquer subpasta. O ZIP atualizado se chama `denardi-resources.zip` e contém a pasta `denardi-resources`.
+Loja/portfólio estática em português para resources de MTA:SA. Inclui home, produtos, pacotes, categorias, busca, preços e detalhes com carrossel: **um vídeo → thumbnail → imagens**. A compra é combinada com **denardi**, ID **237549379702095872**, pelo [Discord](https://discord.com/users/237549379702095872). Não há checkout, backend ou cadastro de clientes.
 
-Uma loja/portfólio em português, com catálogo escuro inspirado na composição da [referência indicada](https://www.vames-store.com/category/2092562), visual responsivo, seis produtos demonstrativos, quatro categorias, busca, filtros por apresentação com ou sem vídeo, ordenação, detalhes em modal com vídeo em destaque, carrossel com vídeo primeiro e várias imagens, links individuais e contato pelo perfil do Discord de denardi. Não há checkout, backend, pagamentos ou cadastro de clientes.
+Os seis produtos e seis pacotes iniciais são exemplos editáveis. Nomes, preços, funcionalidades e clipes não representam ofertas reais do usuário. Os clipes locais são animações ilustrativas, não gravações de resources em execução. Substitua esses dados pelo seu catálogo antes de anunciar ofertas. Os avisos globais de demonstração estão desativados conforme solicitado; isso não transforma os exemplos em produtos reais.
 
-**A loja usa o nome Denardi Resources. Os produtos, preços, funcionalidades e previews são demonstrativos.** Os clipes são ilustrações originais, não capturas de resources reais em execução. As thumbnails serão fornecidas por você; enquanto não forem adicionadas, aparece um espaço reservado neutro. Substitua o conteúdo antes de divulgar como sua loja.
+## Usar o painel
 
-## 1. Abrir a loja
+1. Abra o link do **Painel** acima.
+2. Em **Produtos**, escolha um item ou clique em **+ Novo produto**.
+3. Preencha título, categoria, preço, descrições e o link do seu vídeo. Há um único vídeo por produto.
+4. Em **Enviar sua thumbnail**, selecione a capa que você preparou. Em **Enviar imagens**, acrescente imagens da galeria; use as setas para ordenar. Também pode informar URLs HTTPS.
+5. Abra **Funcionalidades, requisitos e entrega** para configurar versão, tags, dependências, condições de entrega e informações adicionais.
+6. Clique em **Salvar produto** ou **Salvar rascunho**.
+7. Use **Ver prévia** para conferir a loja com o rascunho.
+8. Quando estiver pronto, clique em **Publicar** e siga a configuração abaixo.
 
-Abra `index.html` com um navegador. Não é necessário instalar pacotes, compilar ou criar uma conta para testar localmente.
+**Salvar rascunho** guarda alterações e imagens somente neste navegador. **Publicar** envia o catálogo e as novas imagens ao GitHub, que atualiza o site pelo Pages. A prévia não altera o que os compradores veem. Rascunhos não são sincronizados entre computadores ou navegadores; faça backup antes de limpar os dados do navegador.
 
-Opcionalmente, na pasta do projeto, use um servidor local se já tiver Python instalado:
+### Produto vendido
+
+Marque **Marcar como vendido** e publique. O item continua no catálogo com apresentação atenuada e etiqueta **Vendido**. Vídeo e imagens continuam acessíveis, mas o botão de compra fica desativado como **Vendido**. Desmarque e publique para disponibilizá-lo novamente. Isso também funciona para pacotes.
+
+### Pacotes, categorias e home
+
+- **Pacotes:** configure preço, licença, resources incluídos, um vídeo, thumbnail, galeria e disponibilidade. A economia é calculada com os preços atuais dos resources incluídos.
+- **Categorias:** edite nomes, identificadores e ícones. Renomear o identificador atualiza os produtos da categoria. Antes de excluir uma categoria em uso, reatribua seus produtos.
+- **Loja e home:** personalize marca, títulos, descrição, Discord, fundo e produtos em destaque.
+
+Preserve o identificador depois de compartilhar um link. Ele cria endereços como `#resource/meu-resource` ou `#pacote/meu-pacote`. Excluir um produto do rascunho também remove suas referências dos pacotes e destaques; a exclusão só entra no site ao publicar.
+
+### Preparar a publicação direta
+
+O painel publica em **denardibtw/denardi-resources**, branch **main**. O GitHub verifica o acesso de escrita. A URL do painel não é privada: visitantes podem criar rascunhos em seus próprios navegadores, mas somente um token autorizado consegue alterar o repositório.
+
+1. Entre na sua conta e abra [Fine-grained personal access tokens](https://github.com/settings/personal-access-tokens/new).
+2. Escolha **denardibtw** como proprietário e uma validade curta conveniente para você.
+3. Em **Repository access**, selecione **Only select repositories** e apenas **denardi-resources**.
+4. Em **Repository permissions**, configure **Contents: Read and write**. **Metadata** permanece somente leitura. Não precisa permitir edição de workflows.
+5. Crie o token por conta própria. Cole-o somente no campo de publicação do painel; não envie pelo chat.
+6. Clique em **Publicar no GitHub**. O campo é limpo ao iniciar a operação. O token é usado durante essa publicação e não entra no rascunho, no backup ou nos arquivos da loja.
+7. O painel confirma o envio e oferece um link para **Actions**. Aguarde **Publicar vitrine no GitHub Pages** concluir e abra a loja.
+
+[Guia oficial de tokens do GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+
+Catálogo e imagens são enviados em uma única atualização. Os demais arquivos são preservados. Se o catálogo mudou em outra sessão, o painel interrompe a publicação para evitar sobrescrever alterações. Exporte seu rascunho, use **Carregar versão publicada** e reaplique as mudanças. Carregar a versão publicada pede confirmação quando houver um rascunho diferente da base.
+
+Se o token expirou ou não tem acesso, prepare outro. Se o envio terminou mas o site ainda não mudou, confira **Actions**: enviar ao repositório e concluir o deploy são etapas diferentes. O painel não guarda seu token para consultas posteriores.
+
+### Backup e alternativa sem token
+
+**Exportar backup e arquivos** baixa um ZIP com:
+
+- `panel-backup.json`: catálogo e base do rascunho;
+- `assets/data.js`: catálogo pronto para publicação;
+- `assets/img/uploads/`: imagens adicionadas neste painel e usadas no catálogo.
+
+**Importar backup** restaura esse ZIP ou o JSON. O ZIP importável é o produzido pelo próprio painel. Arquivos já existentes no repositório e imagens externas permanecem referenciados e não são baixados no backup. O arquivo exportado não contém token.
+
+Para publicar manualmente, extraia o backup e envie `assets/data.js` e as novas imagens às pastas correspondentes no GitHub, preservando os nomes. Use uma branch e faça o merge depois de enviar todos os arquivos. Atualizar `main` inicia o deploy.
+
+## Vídeo e imagens
+
+Cada produto/pacote usa **um único `videoUrl`**. São aceitos YouTube, Vimeo, arquivos em `assets/videos/` e URLs HTTPS diretas de MP4, WebM ou OGV. Para gravações longas, YouTube/Vimeo mantêm o repositório leve. O vídeo precisa permitir incorporação; o player também oferece um link para abrir a gravação diretamente.
+
+O carrossel começa pelo vídeo, seguido da thumbnail e da galeria. Sem vídeo, começa pelas imagens. Fechar os detalhes ou mudar de mídia interrompe a reprodução. Players externos carregam somente depois do clique. Não há geração de thumbnails ou extração automática de capas.
+
+O painel envia **imagens**, não arquivos de vídeo. Para vídeo local, envie-o pelo GitHub para `assets/videos/` e informe, por exemplo, `./assets/videos/meu-resource.mp4`. Prefira imagens em 16:9, como 1280 × 720 px. São aceitos PNG, JPG, WebP e GIF de até 10 MB cada, sem alterar sua arte.
+
+[Player do YouTube](https://developers.google.com/youtube/player_parameters), [incorporação no Vimeo](https://help.vimeo.com/hc/en-us/articles/30100623447569-FAQ-Embedded-videos).
+
+## Abrir localmente
+
+A vitrine pode ser aberta pelo `index.html`. Para painel, rascunhos e prévia, use um servidor HTTP. Se já tiver Python, abra a pasta do projeto e execute:
 
 ```sh
 python -m http.server 8000
 ```
 
-Acesse `http://localhost:8000`. Para parar, pressione `Ctrl+C` no terminal. Não é necessário ter Python para publicar no GitHub.
+Acesse `http://localhost:8000/` e `http://localhost:8000/admin.html`. Para parar, pressione `Ctrl+C`. Não é necessário instalar dependências ou compilar para publicar.
 
-## 2. Personalizar antes de publicar
+## Publicar no GitHub Pages
 
-O arquivo principal para edição é **`assets/data.js`**. Você pode editar pelo Bloco de Notas, um editor de código ou pelo próprio GitHub. Preserve aspas, chaves e vírgulas.
+O repositório atual já usa GitHub Actions. O endereço acompanha o nome **denardi-resources**; o antigo `/denardidev/` não redireciona automaticamente no Pages.
 
-### Home e catálogo
+Para publicar uma cópia em outro repositório:
 
-A página inicial segue a composição da [home de referência](https://www.vames-store.com/): fundo de cidade, título centralizado, faixa com quatro benefícios, produto em destaque com vídeo e três cards. Os textos foram adaptados para Denardi Resources e MTA:SA. Não há estatísticas de vendas nem compradores inventados.
+1. Crie um repositório público.
+2. Extraia `denardi-resources.zip`. Envie **o conteúdo da pasta** à raiz: `index.html`, `admin.html`, `assets/`, `.nojekyll`, `README.md` e `.github/workflows/deploy-pages.yml`.
+3. Se a pasta `.github` não aparecer no upload, use **Add file → Create new file**, informe `.github/workflows/deploy-pages.yml` e copie o arquivo entregue.
+4. Em **Settings → Pages → Source**, selecione **GitHub Actions**.
+5. Em **Actions**, abra **Publicar vitrine no GitHub Pages** e execute **Run workflow**. As próximas alterações em `main` iniciam o deploy.
+6. Espere concluir e consulte o endereço em **Settings → Pages**.
 
-Em `STORE_CONFIG.home`, personalize `welcome`, `title`, `description`, `heroImage`, `highlightProductId`, `highlightLabel` e `featuredProductIds`. Use IDs de produtos existentes em `highlightProductId` e `featuredProductIds`. O produto em destaque utiliza o primeiro vídeo configurado nele; os três cards também abrem os detalhes com carrossel.
+O workflow publica `index.html`, `admin.html`, `.nojekyll` e todo `assets/`. Os caminhos relativos funcionam em subpastas como `https://USUARIO.github.io/REPOSITORIO/`.
 
-O fundo decorativo `assets/img/home-city.webp` foi obtido da home indicada como referência. Pode substituí-lo por sua imagem, atualizando `heroImage`; ele é decorativo e não é uma captura de um resource seu. As thumbnails dos produtos continuam vazias para você fornecer as imagens reais.
+Para outro repositório, ajuste proprietário/repositório/branch em `assets/admin-github.js`, os links e identificação em `admin.html` e este guia. Se a branch não for `main`, ajuste o workflow.
 
-Os links `#inicio` e `#catalogo` alternam entre home e Scripts no mesmo site estático, sem exigir configuração adicional no Pages. As categorias da home abrem o catálogo já filtrado. O vídeo de destaque só reproduz após clicar e para ao abrir um produto ou trocar de página.
+[Criação de um site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site), [workflows oficiais](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
-### Pacotes
+Alternativa: use **Settings → Pages → Deploy from a branch → main → /(root)**, enviando os arquivos públicos e `.nojekyll`. Não use simultaneamente essa opção e o workflow personalizado.
 
-A aba **Pacotes** substitui “Como comprar” na navegação e abre `#pacotes`. Segue a composição da [referência de pacotes](https://www.vames-store.com/category/2100161): busca, filtros de licença, grade de três cards e faixa de economia. Os seis pacotes incluídos são **demonstrativos**, assim como preços e licenças. A compra continua sendo combinada diretamente com denardi; não há checkout.
+## Personalização por arquivos
 
-Edite `STORE_PACKAGES` em `assets/data.js`. Cada pacote tem `id`, `name`, `price`, `license` (`"open"` ou `"protected"`), `includedProducts` e os mesmos campos de imagens, vídeos, descrição, funcionalidades, requisitos e entrega dos produtos individuais. Em `includedProducts`, use os IDs dos resources em `STORE_PRODUCTS`. O site soma os preços atuais desses resources e compara com o preço do pacote para calcular a economia; se não houver economia, mostra “Disponível como pacote”. Não coloque descontos fictícios nas suas ofertas reais.
+O painel é a forma recomendada para editar o catálogo. Para editar `assets/data.js` manualmente, preserve o formato gerado: quatro atribuições `window.STORE_CONFIG`, `window.STORE_CATEGORIES`, `window.STORE_PRODUCTS` e `window.STORE_PACKAGES`, com valores JSON válidos. O painel lê JSON sem executar arquivos importados.
 
-```js
-// Exemplo de estrutura: troque por uma oferta real.
-id: "meu-pacote",
-name: "Nome do seu pacote",
-price: 199.90,
-license: "open",
-includedProducts: ["hud-essentials", "inventario-grid"],
-image: "./assets/img/minha-capa-do-pacote.webp",
-imageAlt: "Descrição da sua capa",
-images: [],
-videoUrl: "https://www.youtube.com/watch?v=ID_DO_VIDEO",
-extraVideos: [],
-```
-
-A busca também encontra os nomes dos resources incluídos. O botão do pacote abre detalhes com carrossel (vídeo primeiro), composição, economia e seu contato. Cada componente pode ser aberto nos detalhes; fechar retorna à página de pacotes. Links individuais usam `#pacote/ID`. As thumbnails continuam sendo fornecidas por você. Personalize `STORE_CONFIG.packagesTitle` para mudar o título e `assets/packages.css` para ajustar esta página. As instruções de licença e entrega continuam disponíveis no rodapé.
-
-### Marca e contatos
-
-Em `STORE_CONFIG`, altere:
-
-| Campo | Conteúdo |
+| Campo | Uso |
 | --- | --- |
-| `catalogTitle` | Título da vitrine, por exemplo Scripts ou Resources. |
-| `name` | Nome da sua marca; atualiza cabeçalho e rodapé. |
-| `pageTitle` | Título exibido na aba do navegador. |
-| `description` | Descrição curta do site para mecanismos de busca. |
-| `discordUrl` | Perfil do Discord: `https://discord.com/users/237549379702095872`. |
-| `discordUsername` | Nome exibido no contato: `denardi`. |
-| `discordId` | ID exibido: `237549379702095872`. Preserve como texto entre aspas. |
-| `demoMode` | Mantenha `true` até substituir todo o conteúdo demonstrativo. |
+| `id`, `name`, `category` | Identificador do link, título e ID da categoria. |
+| `price`, `sold`, `featured` | Preço numérico, vendido e destaque. |
+| `description`, `longDescription` | Texto da vitrine e detalhes. |
+| `image`, `imageAlt`, `images` | Thumbnail, descrição acessível e galeria. |
+| `videoUrl`, `videoTitle` | Único vídeo e título. |
+| `videoPoster`, `videoCaptions` | Capa opcional e legendas WebVTT. |
+| `features`, `requirements`, `delivery`, `version`, `tags` | Funcionamento e entrega. |
+| `includedProducts`, `license` | Composição do pacote e licença `open`/`protected`. |
 
-O contato já está configurado: **denardi**, **id: 237549379702095872**. Nos detalhes dos produtos e no rodapé, o nome abre o perfil no Discord em uma nova aba. Não há botões de WhatsApp ou de conversa no Discord. O comprador pode copiar o link do resource no modal e enviá-lo ao entrar em contato.
+O campo legado `extraVideos` fica vazio e é ignorado. Use preços como `79.90`, IDs sem espaços e Discord ID como texto entre aspas. Use `./assets/...`, sem barra inicial. Maiúsculas/minúsculas fazem diferença no Pages.
 
-Para atualizar o contato, altere `discordUrl`, `discordUsername` e `discordId` em `assets/data.js`. Não inclua senhas, tokens ou dados privados: o código de um site estático fica acessível aos visitantes.
+O visual fica em `assets/styles.css`, `home.css` e `packages.css`. Navegação, rodapé e dúvidas gerais ficam em `index.html`; ajuste licença, entrega e suporte às condições reais. `brand.svg` e `favicon.svg` contêm o monograma DR.
 
-### Produtos
+A composição segue as referências de [home](https://www.vames-store.com/), [catálogo](https://www.vames-store.com/category/2092562) e [pacotes](https://www.vames-store.com/category/2100161). O fundo decorativo `assets/img/home-city.webp` veio da home indicada; substitua-o pelo seu material se desejar. Não é uma captura de um resource seu.
 
-Cada objeto em `STORE_PRODUCTS` é um produto. Troque nome, descrição curta e completa, preço, categoria, imagem, funcionalidades, requisitos, versão e condições de entrega. O preço é um número com ponto decimal, como `79.90`; a página o formata em reais.
+## Conferir uma atualização
 
-Para adicionar um produto, copie um objeto completo e personalize:
+- Confira títulos, preços e condições reais.
+- Teste busca, categorias, links individuais e o celular.
+- Veja o vídeo, avance pelas imagens e feche os detalhes para conferir a interrupção.
+- Na prévia, marque um item como vendido: ele continua acessível sem compra.
+- Aguarde o deploy em **Actions** antes de divulgar uma atualização.
 
-```js
-{
-  id: "meu-resource", // Único, sem espaços. Prefira letras minúsculas e hífens.
-  name: "Nome real do resource",
-  category: "interfaces", // ID de uma categoria cadastrada.
-  price: 79.90,
-  image: "./assets/img/meu-resource.webp",
-  imageAlt: "Descrição da imagem para acessibilidade",
-  images: [], // Outras imagens do resource, na ordem em que devem aparecer no carrossel.
-  badge: "", // Opcional. Use apenas uma informação verdadeira.
-  featured: false,
-  version: "1.0",
-  description: "Descrição curta e real do produto.",
-  longDescription: "Descrição completa do que ele faz.",
-  features: ["Funcionalidade real 1", "Funcionalidade real 2"],
-  requirements: ["Versão necessária do MTA:SA", "Dependências reais"],
-  delivery: "Informe arquivos entregues, licença, instalação e suporte reais.",
-  tags: ["HUD", "Interface"],
-  videoUrl: "", // YouTube, Vimeo ou ./assets/videos/meu-resource.mp4.
-  videoTitle: "Apresentação do resource", // Opcional.
-  videoPoster: "", // Opcional; sem este campo, usa image.
-  videoCaptions: "", // Opcional: ./assets/videos/legendas-pt.vtt.
-  extraVideos: [], // Opcional: outros vídeos do mesmo produto.
-},
-```
+Se houver 404, confira o deploy e `index.html` na raiz. Se uma imagem falhar, revise caminho, extensão e maiúsculas. Se uma edição manual quebrar o catálogo, revise o JSON. Se o navegador não salvar rascunhos, confira armazenamento e exporte um backup.
 
-O `id` cria um link como `https://SEU-USUARIO.github.io/SEU-REPOSITORIO/#resource/meu-resource`. Preserve os IDs após compartilhar links. Os detalhes ficam em um modal: não são necessários arquivos separados ou regras de redirecionamento.
-
-### Imagens, categorias e textos
-
-**Várias imagens por resource:** mantenha a thumbnail em `image` e adicione as demais em `images`. A thumbnail também entra como a primeira imagem do carrossel. Envie os arquivos para `assets/img/` e preencha os caminhos:
-
-```js
-image: "./assets/img/hud-thumbnail.webp",
-imageAlt: "Visão geral do HUD",
-images: [
-  { src: "./assets/img/hud-veiculo.webp", alt: "HUD com informações do veículo", title: "Informações do veículo" },
-  { src: "./assets/img/hud-detalhes.webp", alt: "Detalhes da interface", title: "Detalhes da interface" },
-],
-```
-
-Também pode usar uma lista simples, como `images: ["./assets/img/imagem-1.webp", "./assets/img/imagem-2.webp"]`. Prefira objetos com `alt` para descrever cada imagem. Os exemplos de caminhos acima são apenas instruções: acrescente seus próprios arquivos. Imagens repetidas com o mesmo caminho aparecem uma só vez.
-
-**Você fornece as thumbnails.** Não há geração de capas nem extração automática de imagens dos vídeos.
-
-1. Envie sua thumbnail para `assets/img/`, por exemplo `hud-thumbnail.webp`.
-2. No produto correspondente em `assets/data.js`, preencha `image: "./assets/img/hud-thumbnail.webp"` e `imageAlt` com uma descrição da imagem.
-3. Publique a atualização normalmente. A thumbnail aparece no card, no carrossel e como capa do vídeo. Se quiser uma capa diferente no player, preencha `videoPoster`.
-
-Deixe `image: ""` enquanto não houver thumbnail. O site mantém o espaço reservado e os vídeos continuam funcionando. Prefira JPG, PNG ou WebP em 16:9, por exemplo 1280 × 720 px; sua imagem é exibida sem adicionar títulos ou outros elementos à arte.
-
-- Coloque suas thumbnails em `assets/img/`.
-- Use caminhos como `./assets/img/arquivo.webp`. Respeite maiúsculas/minúsculas: `Preview.png` e `preview.png` são nomes diferentes no GitHub Pages.
-- Edite `STORE_CATEGORIES` para renomear ou acrescentar categorias. Os ícones disponíveis são `layout`, `layers`, `car`, `map` e `grid`. O filtro “Todos” é automático.
-- Em `index.html`, personalize a navegação, o rodapé e os textos das janelas de compra, dúvidas e informações. Os cards, capas e players são preenchidos pelos produtos de `data.js`.
-- Edite `assets/styles.css` para trocar cores e fontes. As variáveis de cor estão no início do arquivo.
-- Troque `assets/img/brand.svg` e `assets/img/favicon.svg` se tiver um logo próprio. O texto da marca é atualizado por `data.js`; o desenho atual é demonstrativo.
-- A FAQ de compatibilidade também contém textos de exemplo. Ajuste-a às condições reais da sua loja.
-- Após substituir produtos, valores, funcionalidades, previews, marca e textos, altere `demoMode: true` para `demoMode: false`. Isso remove os avisos globais e as etiquetas DEMO; não substitui automaticamente textos demonstrativos dentro dos dados, das imagens ou dos vídeos.
-
-## Adicionar os vídeos dos seus resources
-
-O vídeo principal é a primeira mídia do carrossel quando estiver configurado. Use as setas laterais para ver as imagens do resource; as bolinhas abaixo também permitem escolher uma mídia. O contador indica a posição. As setas do teclado funcionam quando o carrossel ou seus controles estão em foco. A imagem da vitrine ganha um botão de assistir. Nos detalhes, o player aparece em destaque ao lado do nome, preço e contato do Discord; no celular, o conteúdo se organiza em uma coluna. Nenhum vídeo toca ao simplesmente entrar no site. Os controles permitem pausar e entrar em tela cheia; fechar os detalhes ou escolher outra mídia interrompe a reprodução.
-
-Em `assets/data.js`, basta preencher **`videoUrl`** em cada produto:
-
-```js
-// YouTube: troque ID_DO_VIDEO pelo ID verdadeiro do seu vídeo.
-videoUrl: "https://www.youtube.com/watch?v=ID_DO_VIDEO",
-// Também aceita youtu.be, Shorts e links /embed/.
-```
-
-```js
-// Vimeo: use o link real do seu vídeo.
-videoUrl: "https://vimeo.com/NUMERO_DO_VIDEO",
-// Links não listados preservam o código privado da URL (h ou /codigo).
-```
-
-```js
-// Arquivo local: envie o arquivo para assets/videos/ e mantenha o caminho relativo.
-videoUrl: "./assets/videos/meu-resource.mp4",
-videoTitle: "Veja o resource em funcionamento",
-videoPoster: "./assets/img/meu-resource.webp", // Capa opcional.
-videoCaptions: "./assets/videos/legendas-pt.vtt", // Legendas opcionais em WebVTT.
-```
-
-Você pode usar MP4, WebM ou OGV, inclusive em uma URL HTTPS direta. A reprodução depende do codec suportado pelo navegador; MP4 com H.264/AAC é uma opção amplamente compatível. Prefira YouTube ou Vimeo para gravações longas, para manter o repositório e o carregamento leves.
-
-Para **vários vídeos por produto**, mantenha o principal em `videoUrl` e acrescente `extraVideos`:
-
-```js
-extraVideos: [
-  { title: "Instalação", url: "https://youtu.be/ID_DO_VIDEO" },
-  {
-    title: "Personalização",
-    url: "./assets/videos/personalizacao.webm",
-    poster: "./assets/img/personalizacao.webp", // Opcional.
-    captions: "./assets/videos/personalizacao-pt.vtt", // Opcional.
-  },
-],
-```
-
-A ordem do carrossel é **vídeo principal → imagens → vídeos adicionais**. Assim, avançar uma vez a partir do vídeo principal já mostra a primeira imagem. Se `videoUrl` estiver vazio, o primeiro vídeo válido de `extraVideos` ocupa a primeira posição; sem vídeos, o carrossel começa pelas imagens. Se ainda não houver imagens, aparece apenas um espaço reservado neutro para elas. Links HTTPS de outros serviços continuam disponíveis em outra aba.
-
-**Demonstrações incluídas:** os dois clipes do HUD e o clipe de inventário são animações de interface, com avisos e legendas. Não demonstram recursos reais. Troque os arquivos, links, títulos, capas e legendas pelo seu material antes de tirar os avisos demonstrativos.
-
-Os players de YouTube/Vimeo são carregados somente ao clicar em assistir. O proprietário do vídeo precisa permitir a incorporação no seu domínio. Para conferir players externos localmente, use o servidor HTTP do início do guia; abrir via `file://` pode impedir a identificação de origem exigida pelo YouTube. O link abaixo do player permite abrir o vídeo diretamente se o serviço bloquear a reprodução incorporada. [Player do YouTube](https://developers.google.com/youtube/player_parameters), [identificação e erros do player](https://developers.google.com/youtube/iframe_api_reference), [incorporação no Vimeo](https://help.vimeo.com/hc/en-us/articles/30100623447569-FAQ-Embedded-videos).
-
-O workflow entregue já inclui tudo dentro de `assets/`, incluindo a pasta de vídeos. Nenhuma alteração no deploy é necessária. Na publicação manual, envie `assets/videos/` junto das imagens. Para atualizar, envie o novo vídeo e altere seu caminho em `data.js`.
-
-## 3. Publicar pelo site do GitHub — opção simples
-
-Esta opção não exige terminal nem GitHub Actions personalizado. GitHub Pages está disponível para repositórios públicos no GitHub Free. [Documentação oficial](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site).
-
-1. Acesse sua conta no GitHub e escolha **New repository**.
-2. Dê um nome, por exemplo `mta-resources`, escolha **Public** e crie o repositório.
-3. Extraia o ZIP entregue. Entre na pasta `denardi-resources`: o arquivo `index.html` deve ficar na raiz do repositório, não dentro de outra pasta `denardi-resources`.
-4. Em **Add file → Upload files**, envie `index.html`, a pasta `assets/` e `README.md`. Confirme em **Commit changes**. A pasta `assets` deve manter sua estrutura interna.
-5. Crie também o arquivo vazio `.nojekyll` na raiz em **Add file → Create new file** e confirme a alteração. Esse arquivo já existe no ZIP, mas pode ficar oculto na seleção de arquivos do seu computador.
-6. Para esta opção, não envie `.github/workflows/deploy-pages.yml`. Se já enviou, remova esse arquivo antes de usar publicação por branch.
-7. Abra **Settings → Pages**. Em **Build and deployment → Source**, escolha **Deploy from a branch**; selecione **main** e **/(root)** e clique em **Save**.
-8. Acompanhe a publicação na aba **Actions**. Quando terminar, consulte o endereço indicado em **Settings → Pages**.
-
-O endereço de um projeto normalmente é `https://SEU-USUARIO.github.io/mta-resources/`. Se o repositório se chamar exatamente `SEU-USUARIO.github.io`, o endereço será `https://SEU-USUARIO.github.io/`. [Publicação por branch e seleção da pasta](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
-
-## 4. Publicar com GitHub Actions — opção automática
-
-O projeto inclui `.github/workflows/deploy-pages.yml`. Ele publica somente `index.html`, `.nojekyll` e `assets/` quando você atualiza a branch `main`. Não há etapa de instalação ou compilação.
-
-1. Envie **todo o conteúdo** de `denardi-resources` para a raiz do repositório, incluindo `.github/workflows/deploy-pages.yml` e `.nojekyll`. Não envie a pasta externa que contém o projeto.
-2. Se a pasta `.github` não aparecer no upload, use **Add file → Create new file**, informe `.github/workflows/deploy-pages.yml` e copie exatamente o conteúdo do arquivo entregue.
-3. Em **Settings → Pages → Source**, escolha **GitHub Actions**.
-4. Em **Actions**, selecione **Publicar vitrine no GitHub Pages** e clique em **Run workflow → Run workflow**. Depois disso, cada alteração enviada para `main` publica uma nova versão automaticamente.
-5. Espere o processo concluir e abra o endereço em **Settings → Pages** ou no resultado do workflow.
-
-Se a branch principal tiver outro nome, altere `branches: [main]` no workflow para esse nome. Não use simultaneamente esta opção e publicação por branch. O workflow usa as ações oficiais de Pages e as permissões necessárias para publicar. [Workflows oficiais do GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
-
-### Alternativa com Git (opcional)
-
-Se já usa Git, abra o terminal na pasta `denardi-resources`, crie um repositório vazio no GitHub e substitua os nomes abaixo antes de executar:
-
-```sh
-git init
-git add .
-git commit -m "Criar vitrine de resources"
-git branch -M main
-git remote add origin https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
-git push -u origin main
-```
-
-Conclua a configuração de **Settings → Pages → GitHub Actions** do passo anterior. O GitHub pode solicitar autenticação.
-
-## 5. Atualizar pelo GitHub
-
-1. No repositório, abra `assets/data.js` e clique no lápis (**Edit**).
-2. Ajuste produtos, preços ou contatos e escolha **Commit changes**. Confirme a alteração em `main` ou faça o merge para `main` se usar outra branch.
-3. Para novas imagens, use **Add file → Upload files** dentro de `assets/img/`; depois atualize o caminho do produto em `data.js`.
-4. Espere a publicação concluir em **Actions** e atualize a página no navegador.
-
-Para alterar aparência e textos gerais, edite `assets/styles.css` e `index.html`. Não há banco de dados para sincronizar. Você também pode editar localmente e usar `git add .`, `git commit -m "Atualizar catálogo"` e `git push`.
-
-## 6. Conferir depois da publicação
-
-- O catálogo abre e todas as imagens aparecem, inclusive no celular.
-- O carrossel abre com o vídeo, avança pelas imagens no celular e no desktop e interrompe a reprodução ao mudar de mídia ou fechar os detalhes.
-- Cada filtro, busca e ordenação funciona. A busca aceita nomes com ou sem acentos.
-- Os detalhes abrem, fecham com Escape e têm o preço e os requisitos corretos.
-- Um link de produto copiado abre o modal ao entrar diretamente no site.
-- O contato mostra denardi e o ID correto, e o nome abre o perfil `https://discord.com/users/237549379702095872`.
-- O aviso demonstrativo foi removido somente após a personalização completa.
-
-Se a página mostrar 404, confira **Settings → Pages**, o término do deploy e a presença de `index.html` na raiz. Se uma imagem não aparecer, confira nome, extensão, maiúsculas e caminho. Se o catálogo desaparecer após editar `data.js`, revise aspas, vírgulas e chaves; o console do navegador ajuda a localizar um erro de sintaxe. Não coloque `/assets/...`: a barra inicial ignora a subpasta do repositório. Use `./assets/...`.
-
-## Estrutura do projeto
+## Estrutura
 
 ```text
 denardi-resources/
 ├── index.html
+├── admin.html
 ├── README.md
 ├── .nojekyll
-├── .gitignore
 ├── .github/workflows/deploy-pages.yml
 └── assets/
-    ├── data.js          # Marca, contatos, categorias e produtos
-    ├── app.js           # Filtros, modais e links de contato
-    ├── media.js         # Players locais, YouTube e Vimeo
-    ├── media.css        # Apresentação de vídeos e galeria
-    ├── videos/          # Vídeos locais e legendas .vtt
-    ├── styles.css       # Identidade visual e versão mobile
-    └── img/             # Previews locais e favicon
+    ├── data.js
+    ├── app.js / media.js
+    ├── styles.css / home.css / packages.css / media.css / sold.css
+    ├── admin.js / admin.css
+    ├── admin-model.js / admin-storage.js / admin-github.js / admin-zip.js
+    ├── store-preview.js
+    ├── img/
+    └── videos/
 ```
 
-Todo o site é estático, sem bibliotecas JavaScript externas ou analytics próprios, e sem chamadas para carregar o catálogo. A tipografia General Sans é carregada pela API oficial do [Fontshare](https://www.fontshare.com/fonts/general-sans); sem internet, usa uma fonte do sistema. Para remover a fonte externa, retire o link do Fontshare e os dois preconnects em `index.html`. Os arquivos podem ser abertos localmente. Links de contato abrem serviços externos; players de YouTube/Vimeo se conectam aos respectivos serviços quando você inicia a reprodução. Vídeos locais funcionam com os arquivos do site.
+A vitrine usa o catálogo incluído no site. Somente o painel consulta a API do GitHub para ler/publicar. Não há bibliotecas JavaScript externas nem analytics próprios. General Sans vem do [Fontshare](https://www.fontshare.com/fonts/general-sans); sem ela, usa a fonte do sistema. Players externos se conectam aos respectivos serviços quando iniciados.
