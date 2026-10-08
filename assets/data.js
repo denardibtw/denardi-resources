@@ -160,7 +160,7 @@ window.STORE_PRODUCTS = [
   },
   {
     "id": "login-flow",
-    "name": "Login Flow",
+    "name": "Login FlowASA",
     "category": "interfaces",
     "price": 59.9,
     "sold": false,
