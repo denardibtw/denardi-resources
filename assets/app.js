@@ -73,7 +73,7 @@
   $("#packages-title").textContent = config.packagesTitle || "Pacotes";
   document.querySelectorAll("[data-package-demo]").forEach((el) => { el.hidden = !config.demoMode; });
   document.querySelectorAll("[data-icon]").forEach((element) => { element.innerHTML = icon(element.dataset.icon); });
-  if (!config.demoMode) ["#demo-banner", "#catalog-demo-note", "#demo-faq", "#footer-demo"].forEach((selector) => { $(selector).hidden = true; });
+  ["#demo-banner", "#catalog-demo-note", "#demo-faq", "#footer-demo"].forEach((selector) => { $(selector).hidden = !config.demoMode; });
   $("#store-discord-contact").innerHTML = discordContact();
   $("#category-filters").innerHTML = [{ id: "all", name: "Todos", icon: "grid" }, ...categories].map((category) =>
     `<button class="category-tab${category.id === "all" ? " active" : ""}" data-category="${escape(category.id)}" aria-pressed="${category.id === "all"}">${icon(category.icon)}${escape(category.name)}</button>`
@@ -107,7 +107,7 @@
         <div class="product-body">
           <div class="product-title-row"><h3><button ${attr}>${escape(product.name)}</button></h3><p class="product-price">${money.format(product.price)}</p></div>
           <div class="product-tags">${isPackage ? `<span class="tag-license-${escape(product.license)}">${escape(licenseName(product.license))}</span><span class="tag-package-count">${packageComponents(product).length} resources</span>` : `<span class="tag-${escape(product.category)}">${escape(categoryName(product.category))}</span>`}<span class="tag-mta">MTA:SA</span>${hasVideo ? `<span class="tag-video">${window.StoreMedia.playIcon} Vídeo</span>` : ""}${config.demoMode ? '<span class="tag-demo">Demo</span>' : ""}</div>
-          <p class="product-description">${escape(product.longDescription || product.description)}</p>
+          <p class="product-description">${escape(product.description || product.longDescription)}</p>
           <div class="product-bottom"><button class="details-button" ${attr} aria-label="Ver detalhes de ${escape(product.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l1 14H4Zm3 0V5a4 4 0 0 1 8 0v2M9 12h6"/></svg>Ver ${isPackage ? "pacote" : "produto"}</button></div>
         </div>
       </article>`;
