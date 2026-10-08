@@ -1,5 +1,6 @@
-(() => {
+(async () => {
   "use strict";
+  await window.StoreReady;
   const config = window.STORE_CONFIG;
   const categories = window.STORE_CATEGORIES;
   const products = window.STORE_PRODUCTS;
@@ -61,6 +62,7 @@
   }
   function productLink(product) {
     const url = new URL(location.href);
+    url.searchParams.delete("preview");
     url.hash = `${productLabel(product)}/${encodeURIComponent(product.id)}`;
     return url.href;
   }
@@ -95,20 +97,21 @@
   function productCard(product) {
       const hasVideo = window.StoreMedia.videos(product).length > 0;
       const isPackage = product.kind === "package";
+      const sold = product.sold === true;
       const attr = `${isPackage ? "data-package" : "data-product"}="${escape(product.id)}"`;
       const pricing = isPackage && packagePricing(product);
-      return `<article class="product-card${isPackage ? " package-card" : ""}" data-category="${escape(product.category)}">
+      return `<article class="product-card${isPackage ? " package-card" : ""}${sold ? " is-sold" : ""}" data-category="${escape(product.category)}">
         ${isPackage ? `<span class="package-deal">${pricing.savings > 0 ? `Pacote · Economize ${money.format(pricing.savings)}` : "Disponível como pacote"}</span>` : ""}
         <button class="product-image-button" ${attr} data-play="${hasVideo}" aria-label="${hasVideo ? "Assistir à apresentação" : "Ver detalhes"} de ${escape(product.name)}">
           ${window.StoreMedia.thumbnail(product)}
-          <span class="image-labels">${product.badge ? `<span class="product-badge">${escape(product.badge)}</span>` : ""}${config.demoMode ? '<span class="demo-badge">DEMO</span>' : ""}</span>
+          <span class="image-labels">${sold ? '<span class="product-badge sold-badge">Vendido</span>' : product.badge ? `<span class="product-badge">${escape(product.badge)}</span>` : ""}${config.demoMode ? '<span class="demo-badge">DEMO</span>' : ""}</span>
           ${hasVideo ? `<span class="product-watch-badge"><span>${window.StoreMedia.playIcon}</span><span>Assistir à apresentação</span></span>` : ""}
         </button>
         <div class="product-body">
           <div class="product-title-row"><h3><button ${attr}>${escape(product.name)}</button></h3><p class="product-price">${money.format(product.price)}</p></div>
           <div class="product-tags">${isPackage ? `<span class="tag-license-${escape(product.license)}">${escape(licenseName(product.license))}</span><span class="tag-package-count">${packageComponents(product).length} resources</span>` : `<span class="tag-${escape(product.category)}">${escape(categoryName(product.category))}</span>`}<span class="tag-mta">MTA:SA</span>${hasVideo ? `<span class="tag-video">${window.StoreMedia.playIcon} Vídeo</span>` : ""}${config.demoMode ? '<span class="tag-demo">Demo</span>' : ""}</div>
           <p class="product-description">${escape(product.description || product.longDescription)}</p>
-          <div class="product-bottom"><button class="details-button" ${attr} aria-label="Ver detalhes de ${escape(product.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l1 14H4Zm3 0V5a4 4 0 0 1 8 0v2M9 12h6"/></svg>Ver ${isPackage ? "pacote" : "produto"}</button></div>
+          <div class="product-bottom"><button class="details-button" ${sold ? 'disabled aria-label="Produto vendido"' : `${attr} aria-label="Comprar ${escape(product.name)}"`}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l1 14H4Zm3 0V5a4 4 0 0 1 8 0v2M9 12h6"/></svg>${sold ? "Vendido" : "Comprar"}</button></div>
         </div>
       </article>`;
   }
@@ -248,6 +251,8 @@
     activeProduct = product;
     if (trigger && !dialog.open) restoreFocus = trigger;
     const isPackage = product.kind === "package";
+    const sold = product.sold === true;
+    const purchaseUrl = safeExternal(config.discordUrl, ["discord.com", "www.discord.com"]);
     const components = isPackage ? packageComponents(product) : [];
     const pricing = isPackage && packagePricing(product);
     const label = productLabel(product);
@@ -256,12 +261,11 @@
       <div class="detail-top">
         ${window.StoreMedia.html({ ...product, categoryLabel: isPackage ? "Pacotes" : categoryName(product.category) })}
         <aside class="detail-summary">
-          <div class="detail-tags"><span>${escape(isPackage ? licenseName(product.license) : categoryName(product.category))}</span><span>MTA:SA</span>${config.demoMode ? '<span>Demo</span>' : ""}</div>
+          <div class="detail-tags"><span>${escape(isPackage ? licenseName(product.license) : categoryName(product.category))}</span><span>MTA:SA</span>${sold ? '<span class="sold-badge">Vendido</span>' : ""}${config.demoMode ? '<span>Demo</span>' : ""}</div>
           <h2 id="detail-title">${escape(product.name)}</h2>
           <div class="detail-price-row"><span class="detail-price">${money.format(product.price)}</span><small>${config.demoMode ? "Valor demonstrativo · confirme as condições" : "Confirme as condições de compra"}</small></div>
           ${isPackage && pricing.savings > 0 ? `<p class="package-savings"><s>${money.format(pricing.total)} em resources avulsos</s><br>Economize ${money.format(pricing.savings)}${config.demoMode ? " · exemplo" : ""}</p>` : ""}
-          ${discordContact()}
-          <div class="detail-contact-note"><h3>Vamos conversar?</h3><p>Confirme compatibilidade, licença, entrega e suporte diretamente com o criador.</p></div>
+          ${sold ? '<button class="button sold-purchase" disabled>Vendido</button><p class="sold-note">Este produto já foi vendido. As imagens e o vídeo continuam disponíveis para você conhecer o trabalho.</p>' : `${discordContact()}${purchaseUrl ? `<a class="button button-purple purchase-button" href="${escape(purchaseUrl)}" target="_blank" rel="noopener noreferrer">Comprar</a>` : ""}<div class="detail-contact-note"><h3>Vamos conversar?</h3><p>Confirme compatibilidade, licença, entrega e suporte diretamente com o criador.</p></div>`}
           <div class="detail-share"><button id="share-product">Copiar link do ${label} ↗</button><small>${escape(product.version || "")}</small></div>
         </aside>
       </div>
