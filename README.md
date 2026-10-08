@@ -30,6 +30,28 @@ O fundo decorativo `assets/img/home-city.webp` foi obtido da home indicada como 
 
 Os links `#inicio` e `#catalogo` alternam entre home e Scripts no mesmo site estático, sem exigir configuração adicional no Pages. As categorias da home abrem o catálogo já filtrado. O vídeo de destaque só reproduz após clicar e para ao abrir um produto ou trocar de página.
 
+### Pacotes
+
+A aba **Pacotes** substitui “Como comprar” na navegação e abre `#pacotes`. Segue a composição da [referência de pacotes](https://www.vames-store.com/category/2100161): busca, filtros de licença, grade de três cards e faixa de economia. Os seis pacotes incluídos são **demonstrativos**, assim como preços e licenças. A compra continua sendo combinada diretamente com denardi; não há checkout.
+
+Edite `STORE_PACKAGES` em `assets/data.js`. Cada pacote tem `id`, `name`, `price`, `license` (`"open"` ou `"protected"`), `includedProducts` e os mesmos campos de imagens, vídeos, descrição, funcionalidades, requisitos e entrega dos produtos individuais. Em `includedProducts`, use os IDs dos resources em `STORE_PRODUCTS`. O site soma os preços atuais desses resources e compara com o preço do pacote para calcular a economia; se não houver economia, mostra “Disponível como pacote”. Não coloque descontos fictícios nas suas ofertas reais.
+
+```js
+// Exemplo de estrutura: troque por uma oferta real.
+id: "meu-pacote",
+name: "Nome do seu pacote",
+price: 199.90,
+license: "open",
+includedProducts: ["hud-essentials", "inventario-grid"],
+image: "./assets/img/minha-capa-do-pacote.webp",
+imageAlt: "Descrição da sua capa",
+images: [],
+videoUrl: "https://www.youtube.com/watch?v=ID_DO_VIDEO",
+extraVideos: [],
+```
+
+A busca também encontra os nomes dos resources incluídos. O botão do pacote abre detalhes com carrossel (vídeo primeiro), composição, economia e seu contato. Cada componente pode ser aberto nos detalhes; fechar retorna à página de pacotes. Links individuais usam `#pacote/ID`. As thumbnails continuam sendo fornecidas por você. Personalize `STORE_CONFIG.packagesTitle` para mudar o título e `assets/packages.css` para ajustar esta página. As instruções de licença e entrega continuam disponíveis no rodapé.
+
 ### Marca e contatos
 
 Em `STORE_CONFIG`, altere:
