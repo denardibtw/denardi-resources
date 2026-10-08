@@ -265,6 +265,30 @@ window.STORE_PRODUCTS = [
     "videoPoster": "",
     "videoCaptions": "",
     "extraVideos": []
+  },
+  {
+    "id": "resource-muz5ews5",
+    "name": "asdsadsad",
+    "category": "interfaces",
+    "price": 0,
+    "sold": false,
+    "image": "",
+    "imageAlt": "",
+    "images": [],
+    "description": "",
+    "longDescription": "",
+    "features": [],
+    "requirements": [],
+    "delivery": "",
+    "tags": [],
+    "badge": "",
+    "featured": false,
+    "version": "",
+    "videoUrl": "",
+    "videoTitle": "",
+    "videoPoster": "",
+    "videoCaptions": "",
+    "extraVideos": []
   }
 ];
 
