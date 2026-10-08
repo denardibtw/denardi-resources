@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Vitrine demonstrativa de resources para MTA:SA. Explore o catálogo e assista aos vídeos de apresentação.">
+  <meta name="theme-color" content="#0d0d0d">
+  <title>Denardi Dev - Resources MTA:SA</title>
+  <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@1&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="./assets/media.css">
+  <script src="./assets/data.js" defer></script>
+  <script src="./assets/media.js" defer></script>
+  <script src="./assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#catalogo">Ir para o catálogo</a>
+  <header class="site-header" id="inicio">
+    <div class="header-inner container">
+      <a class="brand" href="#inicio" aria-label="Denardi Dev - Resources MTA:SA, início"><img class="brand-mark" src="./assets/img/brand.svg" width="56" height="48" alt=""><span class="brand-name" data-brand>Denardi Dev - Resources MTA:SA</span></a>
+      <button class="menu-toggle" id="menu-toggle" aria-controls="main-nav" aria-expanded="false" aria-label="Abrir menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <nav class="main-nav" id="main-nav" aria-label="Navegação principal"><a href="#inicio">Início</a><a class="active" href="#catalogo">Scripts</a><a href="#categorias">Categorias</a><a href="#como-comprar" data-info="compra">Como comprar</a><a href="#duvidas" data-info="duvidas">Dúvidas</a><a href="#informacoes" data-info="sobre">Informações</a></nav>
+      <div class="header-actions"><a class="button header-contact" href="#contato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5H4v14h4m5-14 7 7-7 7m7-7H8"/></svg><span>Contato</span></a><span class="currency-label" aria-label="Preços em reais brasileiros">BRL</span></div>
+    </div>
+  </header>
+  <main class="container catalog-section" id="catalogo" aria-labelledby="catalog-title">
+    <div class="catalog-heading"><h1 id="catalog-title">Scripts</h1><p class="demo-banner" id="demo-banner"><span></span> Conteúdo demonstrativo</p></div>
+    <div class="catalog-toolbar">
+      <div class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><label class="sr-only" for="search">Buscar resources</label><input id="search" type="search" placeholder="Buscar..." autocomplete="off"></div>
+      <div class="presentation-filters" id="presentation-filters" role="group" aria-label="Filtrar apresentação"><button class="active" data-presentation="all" aria-pressed="true">Todos</button><button data-presentation="video" aria-pressed="false">Com vídeo</button><button data-presentation="image" aria-pressed="false">Só imagens</button></div>
+    </div>
+    <div class="catalog-controls" id="categorias"><div class="category-tabs" id="category-filters" role="group" aria-label="Filtrar por categoria"></div><div class="catalog-meta"><p id="results-count" role="status" aria-live="polite" aria-atomic="true"></p><div class="sort-control"><label for="sort" class="sr-only">Ordenar resources</label><select id="sort"><option value="featured">Destaques</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option><option value="name">Nome: A–Z</option></select></div></div></div>
+    <div class="product-grid" id="product-grid"></div>
+    <div class="empty-state" id="empty-state" hidden><span aria-hidden="true">⌕</span><h2>Nenhum resource encontrado.</h2><p>Tente outro nome, apresentação ou categoria.</p><button class="button button-purple" id="reset-filters">Limpar filtros</button></div>
+    <noscript><p class="noscript-message">Ative o JavaScript para visualizar os produtos, filtrar o catálogo e assistir às apresentações.</p></noscript>
+    <p class="catalog-footnote" id="catalog-demo-note">Produtos, preços, funcionalidades e vídeos de exemplo. Adicione suas thumbnails para personalizar.</p>
+  </main>
+  <footer class="site-footer" id="contato"><div class="container footer-grid"><div class="footer-brand"><a class="brand" href="#inicio" aria-label="Denardi Dev - Resources MTA:SA, início"><img src="./assets/img/brand.svg" class="footer-mark" width="88" height="76" alt=""><span data-brand>Denardi Dev - Resources MTA:SA</span></a><p>Uma nova experiência<br>para o seu servidor.</p><p class="copyright">© <span id="year"></span> <span data-brand>Denardi Dev - Resources MTA:SA</span><span id="footer-demo"> · Produtos demonstrativos</span></p></div><div><h2>Mais</h2><a href="#catalogo">Scripts</a><a href="#categorias">Categorias</a><a href="#catalogo" data-show-videos>Vídeos de apresentação</a><a href="#como-comprar" data-info="compra">Como comprar</a></div><div><h2>Contato</h2><div id="store-discord-contact"><div class="discord-contact"><div class="discord-contact-heading">Discord</div><a class="discord-profile" href="https://discord.com/users/237549379702095872" target="_blank" rel="noopener noreferrer">denardi <span aria-hidden="true">↗</span></a><p class="discord-contact-id">id: 237549379702095872</p></div></div></div><div><h2>Informações</h2><a href="#duvidas" data-info="duvidas">Dúvidas frequentes</a><a href="#informacoes" data-info="sobre">Sobre a loja</a><a href="#como-comprar" data-info="compra">Licença e entrega</a></div></div><div class="container footer-bottom"><p>A compra é combinada diretamente com o criador pelo Discord.</p><p>Projeto independente. Sem vínculo com MTA ou Rockstar Games.</p></div></footer>
+  <dialog class="product-dialog" id="product-dialog" aria-labelledby="detail-title"><button class="dialog-close" data-close aria-label="Fechar detalhes">×</button><div id="product-detail"></div></dialog>
+  <dialog class="info-dialog" id="info-dialog" aria-labelledby="info-title"><button class="dialog-close" data-close aria-label="Fechar informações">×</button><h2 id="info-title">Informações</h2>
+    <section data-info-panel="compra" id="como-comprar" hidden><p class="info-intro">A compra acontece por contato direto com o criador.</p><ol class="buy-steps"><li><span>01</span><div><h3>Conheça o resource</h3><p>Abra os detalhes, assista aos vídeos e confira funcionalidades e requisitos.</p></div></li><li><span>02</span><div><h3>Confirme as condições</h3><p>Converse pelo Discord sobre compatibilidade, licença, preço, instalação e suporte.</p></div></li><li><span>03</span><div><h3>Combine a entrega</h3><p>Acerte pagamento e entrega diretamente com o criador antes de comprar. Este site não recebe pagamentos.</p></div></li></ol></section>
+    <section data-info-panel="duvidas" class="faq-list" id="duvidas" hidden><details><summary>Como faço para comprar?<span aria-hidden="true">+</span></summary><p>Escolha um resource e veja o contato denardi nos detalhes ou no rodapé. O nome abre o perfil no Discord; o ID também está disponível. A compra é combinada diretamente pelo Discord.</p></details><details><summary>É compatível com meu servidor?<span aria-hidden="true">+</span></summary><p>Confirme a versão do MTA:SA, o gamemode e as dependências com o criador. Os requisitos desta demonstração são exemplos.</p></details><details><summary>O que está incluído?<span aria-hidden="true">+</span></summary><p>Arquivos, licença, instalação, atualizações e suporte dependem do produto e do acordo com o criador. Confirme antes do pagamento.</p></details><details id="demo-faq"><summary>Estes produtos e vídeos são reais?<span aria-hidden="true">+</span></summary><p>Os produtos, preços, funcionalidades e vídeos apresentados são demonstrativos. Os clipes são animações ilustrativas, não gravações de resources reais.</p></details></section>
+    <section data-info-panel="sobre" id="informacoes" hidden><p class="info-intro">Resources e novas possibilidades para o universo MTA:SA.</p><p>Explore o catálogo, use os filtros e assista às apresentações para conhecer cada proposta. Quando encontrar algo que combina com seu servidor, entre em contato e confirme os detalhes da compra.</p><p>Licença, compatibilidade e condições de entrega são informadas pelo criador. Esta loja é um projeto independente, sem vínculo com MTA ou Rockstar Games.</p></section>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
