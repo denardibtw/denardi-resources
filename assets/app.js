@@ -9,7 +9,7 @@
   const grid = $("#product-grid");
   const dialog = $("#product-dialog");
   const infoDialog = $("#info-dialog");
-  const state = { category: "all", query: "", sort: "featured", presentation: "all" };
+  const state = { category: "all", query: "", sort: "featured" };
   const packageState = { query: "", license: "all" };
   const homeSettings = config.home || {};
   const homeProduct = products.find((product) => product.id === homeSettings.highlightProductId) || products.find((product) => window.StoreMedia.videos(product).length) || products[0];
@@ -83,7 +83,6 @@
   function render() {
     const query = normalize(state.query.trim());
     const filtered = products.filter((product) => (state.category === "all" || product.category === state.category)
-      && (state.presentation === "all" || (window.StoreMedia.videos(product).length > 0) === (state.presentation === "video"))
       && normalize([product.name, product.description, categoryName(product.category), ...(product.tags || [])].join(" ")).includes(query));
     if (state.sort === "price-asc") filtered.sort((a, b) => a.price - b.price);
     else if (state.sort === "price-desc") filtered.sort((a, b) => b.price - a.price);
@@ -208,13 +207,6 @@
     $("#category-filters").querySelectorAll("button").forEach((tab) => { const active = tab === button; tab.classList.toggle("active", active); tab.setAttribute("aria-pressed", String(active)); });
     render();
   });
-  $("#presentation-filters").addEventListener("click", (event) => {
-    const button = event.target.closest("[data-presentation]");
-    if (!button) return;
-    state.presentation = button.dataset.presentation;
-    $("#presentation-filters").querySelectorAll("button").forEach((tab) => { const active = tab === button; tab.classList.toggle("active", active); tab.setAttribute("aria-pressed", String(active)); });
-    render();
-  });
   $("#menu-toggle").addEventListener("click", () => {
     const open = $("#main-nav").classList.toggle("is-open");
     $("#menu-toggle").setAttribute("aria-expanded", String(open));
@@ -240,7 +232,7 @@
   });
   function resetCatalogFilters() {
     state.query = ""; state.sort = "featured"; $("#search").value = ""; $("#sort").value = "featured";
-    $("#presentation-filters [data-presentation='all']").click(); $("#category-filters [data-category='all']").click();
+    $("#category-filters [data-category='all']").click();
   }
   $("#reset-filters").addEventListener("click", () => { resetCatalogFilters(); $("#search").focus(); });
   function showProduct(id, trigger, autoPlay = false, kind = "resource") {
@@ -331,7 +323,6 @@
     const homeCategory = event.target.closest("[data-home-category]");
     if (homeCategory) {
       state.query = ""; $("#search").value = "";
-      $("#presentation-filters [data-presentation='all']").click();
       $("#category-filters").querySelectorAll("button").forEach((button) => { if (button.dataset.category === homeCategory.dataset.homeCategory) button.click(); });
       showPage("catalog"); return;
     }
@@ -346,7 +337,7 @@
       return;
     }
     if (event.target.closest("[data-show-videos]")) {
-      $("#search").value = ""; state.query = ""; $("[data-category='all']").click(); $("[data-presentation='video']").click();
+      resetCatalogFilters(); showPage("catalog");
       return;
     }
     const packageButton = event.target.closest("[data-package]");
