@@ -20,6 +20,16 @@ Acesse `http://localhost:8000`. Para parar, pressione `Ctrl+C` no terminal. Não
 
 O arquivo principal para edição é **`assets/data.js`**. Você pode editar pelo Bloco de Notas, um editor de código ou pelo próprio GitHub. Preserve aspas, chaves e vírgulas.
 
+### Home e catálogo
+
+A página inicial segue a composição da [home de referência](https://www.vames-store.com/): fundo de cidade, título centralizado, faixa com quatro benefícios, produto em destaque com vídeo e três cards. Os textos foram adaptados para Denardi Dev e MTA:SA. Não há estatísticas de vendas nem compradores inventados.
+
+Em `STORE_CONFIG.home`, personalize `welcome`, `title`, `description`, `heroImage`, `highlightProductId`, `highlightLabel` e `featuredProductIds`. Use IDs de produtos existentes em `highlightProductId` e `featuredProductIds`. O produto em destaque utiliza o primeiro vídeo configurado nele; os três cards também abrem os detalhes com carrossel.
+
+O fundo decorativo `assets/img/home-city.webp` foi obtido da home indicada como referência. Pode substituí-lo por sua imagem, atualizando `heroImage`; ele é decorativo e não é uma captura de um resource seu. As thumbnails dos produtos continuam vazias para você fornecer as imagens reais.
+
+Os links `#inicio` e `#catalogo` alternam entre home e Scripts no mesmo site estático, sem exigir configuração adicional no Pages. As categorias da home abrem o catálogo já filtrado. O vídeo de destaque só reproduz após clicar e para ao abrir um produto ou trocar de página.
+
 ### Marca e contatos
 
 Em `STORE_CONFIG`, altere:

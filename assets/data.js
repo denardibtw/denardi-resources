@@ -21,6 +21,15 @@ window.STORE_CONFIG = {
   discordUrl: "https://discord.com/users/237549379702095872",
   discordUsername: "denardi",
   discordId: "237549379702095872", // Mantenha o ID entre aspas.
+  home: {
+    welcome: "Bem-vindo à",
+    title: "DENARDI DEV",
+    description: "Conheça novas possibilidades para seu servidor. Confira vídeos, imagens e informações de cada resource antes de conversar sobre compatibilidade, licença e condições de compra.",
+    heroImage: "./assets/img/home-city.webp", // Fundo decorativo. Pode trocar pela sua imagem.
+    highlightProductId: "hud-essentials", // ID do produto apresentado com vídeo na home.
+    highlightLabel: "EM DESTAQUE",
+    featuredProductIds: ["hud-essentials", "inventario-grid", "garage-studio"],
+  },
 };
 
 window.STORE_CATEGORIES = [
