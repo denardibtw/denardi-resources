@@ -1,11 +1,13 @@
 (() => {
   "use strict";
   const M = window.AdminModel;
+  const session = window.AdminSession;
   const $ = (selector) => document.querySelector(selector);
   const E = M.escape;
   const seed = M.fromGlobals();
   let data = M.clone(seed), baseData = M.clone(seed), baseSha = null;
   let files = new Map(), urls = new Map(), section = "products", selected = 0, dirty = false, busy = false;
+  let authPending = false;
   const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
   const titles = { products: "Produtos", packages: "Pacotes", categories: "Categorias", store: "Loja e home" };
   function message(text, type = "") {
@@ -225,14 +227,19 @@
     document.querySelectorAll(".admin-header button,.admin-sidebar button,#admin-workspace input,#admin-workspace select,#admin-workspace textarea,#admin-workspace button,#publish-submit").forEach((element) => { element.disabled = value; });
   }
   async function guard(action) {
-    if (busy) return;
-    try { await action(); } catch (error) { message(error.message || "Não foi possível concluir esta ação.", "error"); }
+    if (busy || !session.signedIn()) return;
+    try { await action(); } catch (error) {
+      if (!session.signedIn()) lock(error.message);
+      else message(error.message || "Não foi possível concluir esta ação.", "error");
+    }
   }
   document.addEventListener("input", (event) => {
+    if (!session.signedIn() || busy) return;
     if (event.target.id === "admin-search") itemList(event.target.value);
     else if (event.target.closest("#admin-workspace") && event.target.id !== "gallery-link") changed();
   });
   document.addEventListener("change", (event) => {
+    if (!session.signedIn() || busy) return;
     if (event.target.id === "thumbnail-file") guard(() => upload(event.target, false));
     else if (event.target.id === "gallery-files") guard(() => upload(event.target, true));
     else if (event.target.id === "import-backup" && event.target.files[0]) guard(() => importBackup(event.target.files[0]));
@@ -240,9 +247,12 @@
   });
   document.addEventListener("click", (event) => {
     const button = event.target.closest("button");
-    if (!button || busy) return;
+    if (!button || busy || !session.signedIn()) return;
     guard(async () => {
-      if (button.dataset.adminSection) { applyActive(); section = button.dataset.adminSection; selected = 0; message(""); render(); }
+      if (button.id === "logout") {
+        if (dirty && !confirm("Sair sem salvar as alterações? Use Salvar rascunho antes de sair para preservá-las.")) return;
+        lock();
+      } else if (button.dataset.adminSection) { applyActive(); section = button.dataset.adminSection; selected = 0; message(""); render(); }
       else if (button.dataset.selectItem !== undefined) { applyActive(); selected = Number(button.dataset.selectItem); message(""); itemList($("#admin-search").value); renderEditor(); }
       else if (button.id === "add-item") {
         applyActive();
@@ -256,11 +266,11 @@
         changed(); render();
       } else if (button.id === "save-draft") { await save(); itemListIfPresent(); message("Rascunho salvo neste navegador.", "success"); }
       else if (button.id === "preview-draft") { await save(); $("#draft-frame").src = "./index.html?preview=admin"; $("#preview-dialog").showModal(); }
-      else if (button.id === "open-publish") { await save(); $("#publish-status").textContent = ""; $("#publication-link").hidden = true; $("#github-token").value = ""; $("#publish-dialog").showModal(); $("#github-token").focus(); }
+      else if (button.id === "open-publish") { await save(); $("#publish-status").textContent = ""; $("#publication-link").hidden = true; $("#publish-dialog").showModal(); $("#publish-submit").focus(); }
       else if (button.id === "export-backup") await backup();
       else if (button.id === "load-published") {
         if ((dirty || JSON.stringify(M.normalize(data)) !== JSON.stringify(M.normalize(baseData))) && !confirm("Carregar o catálogo publicado no lugar do rascunho? Exporte um backup para preservar suas alterações.")) return;
-        const remote = await window.AdminGitHub.published();
+        const remote = await session.published();
         data = remote.data; baseData = M.clone(remote.data); baseSha = remote.sha; files = new Map(); selected = 0; render(); await save();
         message("Versão publicada carregada.", "success");
       } else if (button.hasAttribute("data-clear-thumbnail")) { applyActive(); data[section][selected].image = ""; changed(); renderEditor(); }
@@ -284,7 +294,6 @@
         if (!confirm("Excluir esta categoria do rascunho?")) return;
         data.categories.splice(index, 1); changed(); render();
       } else if (button.hasAttribute("data-admin-close")) {
-        if (button.closest("#publish-dialog")) $("#github-token").value = "";
         button.closest("dialog").close();
         if (button.closest("#preview-dialog")) $("#draft-frame").src = "about:blank";
       }
@@ -293,41 +302,80 @@
   function itemListIfPresent() { if ($("#admin-item-list")) { itemList($("#admin-search").value); renderEditor(); } }
   document.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (event.target.id === "login-form") { signIn(); return; }
+    if (!session.signedIn()) return;
     if (event.target.id !== "publish-form") return guard(async () => { await save(); itemListIfPresent(); message("Rascunho salvo.", "success"); });
     if (busy) return;
-    let credential = $("#github-token").value.trim();
-    $("#github-token").value = "";
     setBusy(true);
     (async () => {
       try {
         await save();
-        const result = await window.AdminGitHub.publish({ data, files, baseSha, baseData, token: credential, progress: (text) => { $("#publish-status").textContent = text; } });
+        const result = await session.publish({ data, files, baseSha, baseData, progress: (text) => { $("#publish-status").textContent = text; } });
         data = result.data; baseData = M.clone(result.data); baseSha = result.sha;
         await window.AdminStorage.write({ data, baseData, baseSha, files: [...files], savedAt: Date.now() });
         dirty = false; $("#draft-state").textContent = "Publicado no GitHub";
         $("#publish-status").textContent = "Alterações enviadas. O GitHub Pages está atualizando a loja. Acompanhe a conclusão pelo link abaixo.";
         $("#publication-link").hidden = false;
         render(); message("Catálogo e imagens enviados ao GitHub.", "success");
-      } catch (error) { $("#publish-status").textContent = error.message || "Não foi possível publicar."; }
-      finally { credential = ""; setBusy(false); }
+      } catch (error) {
+        if (!session.signedIn()) lock(error.message);
+        else $("#publish-status").textContent = error.message || "Não foi possível publicar.";
+      }
+      finally { setBusy(false); }
     })();
   });
-  $("#publish-dialog").addEventListener("cancel", (event) => { if (busy) event.preventDefault(); else $("#github-token").value = ""; });
-  $("#publish-dialog").addEventListener("close", () => { $("#github-token").value = ""; });
+  $("#publish-dialog").addEventListener("cancel", (event) => { if (busy) event.preventDefault(); });
   $("#preview-dialog").addEventListener("close", () => { $("#draft-frame").src = "about:blank"; });
   window.addEventListener("beforeunload", (event) => { if (dirty || busy) { event.preventDefault(); event.returnValue = ""; } });
-  (async () => {
+  function loginStatus(text, error = false) {
+    $("#login-status").textContent = text || "";
+    $("#login-status").hidden = !text;
+    $("#login-status").classList.toggle("error", error);
+  }
+  function lock(reason = "") {
+    session.logout();
+    for (const id of ["#publish-dialog", "#preview-dialog"]) if ($(id).open) $(id).close();
+    $("#draft-frame").src = "about:blank";
+    $("#admin-shell").hidden = true; $("#admin-login").hidden = false;
+    $("#admin-workspace").innerHTML = ""; $("#session-user").textContent = "";
+    $("#login-token").value = ""; dirty = false;
+    for (const url of urls.values()) URL.revokeObjectURL(url);
+    files = new Map(); urls = new Map(); data = M.clone(seed); baseData = M.clone(seed); baseSha = null;
+    section = "products"; selected = 0; message("");
+    loginStatus(reason, Boolean(reason)); $("#login-token").focus();
+  }
+  async function signIn() {
+    if (authPending) return;
+    let credential = $("#login-token").value.trim();
+    $("#login-token").value = "";
+    if (!credential) { loginStatus("Informe seu token do GitHub.", true); return; }
+    authPending = true; $("#login-submit").disabled = true; $("#login-token").disabled = true;
+    $("#login-submit").textContent = "Verificando acesso…"; loginStatus("Conferindo sua conta e a permissão de publicação…");
+    try {
+      const result = await session.login(credential);
+      await initialize(result.catalog);
+      $("#session-user").textContent = "@" + result.login;
+      $("#admin-login").hidden = true; $("#admin-shell").hidden = false;
+      $("#admin-section-title").focus(); loginStatus("");
+    } catch (error) { lock(error.message || "Não foi possível verificar o acesso. Confira sua conexão e tente novamente."); }
+    finally {
+      credential = ""; authPending = false;
+      $("#login-submit").disabled = false; $("#login-token").disabled = false;
+      $("#login-submit").textContent = "Entrar no painel ↗";
+      if (!session.signedIn()) $("#login-token").focus();
+    }
+  }
+  async function initialize(remote) {
+    data = M.clone(remote.data); baseData = M.clone(remote.data); baseSha = remote.sha;
     try {
       const snapshot = await window.AdminStorage.read();
       if (snapshot?.data) {
         data = M.validate(M.normalize(snapshot.data)); baseData = M.normalize(snapshot.baseData || seed); baseSha = snapshot.baseSha || null;
         files = new Map(snapshot.files || []); $("#draft-state").textContent = "Rascunho carregado";
       } else {
-        try { const remote = await window.AdminGitHub.published(); data = remote.data; baseData = M.clone(remote.data); baseSha = remote.sha; }
-        catch { message("Catálogo do site carregado. A versão do GitHub será conferida ao publicar."); }
         $("#draft-state").textContent = "Catálogo carregado";
       }
       render();
     } catch (error) { render(); message(error.message, "error"); $("#draft-state").textContent = "Rascunho em memória"; }
-  })();
+  }
 })();
