@@ -10,11 +10,11 @@
  * Use aspas e vírgulas como nos exemplos. Os caminhos das imagens são relativos ao index.html.
  */
 window.STORE_CONFIG = {
-  name: "Denardi Dev - Resources MTA:SA",
+  name: "Denardi Resources",
   catalogTitle: "Scripts",
   packagesTitle: "Pacotes",
-  pageTitle: "Denardi Dev - Resources MTA:SA",
-  description: "Vitrine de resources para MTA:SA. Explore o catálogo e fale com o criador para comprar.",
+  pageTitle: "Denardi Resources",
+  description: "Denardi Resources: resources e pacotes para MTA:SA. Explore os produtos, assista aos vídeos e fale com denardi para comprar.",
   demoMode: true,
   currency: "BRL",
   locale: "pt-BR",
@@ -24,7 +24,7 @@ window.STORE_CONFIG = {
   discordId: "237549379702095872", // Mantenha o ID entre aspas.
   home: {
     welcome: "Bem-vindo à",
-    title: "DENARDI DEV",
+    title: "DENARDI RESOURCES",
     description: "Conheça novas possibilidades para seu servidor. Confira vídeos, imagens e informações de cada resource antes de conversar sobre compatibilidade, licença e condições de compra.",
     heroImage: "./assets/img/home-city.webp", // Fundo decorativo. Pode trocar pela sua imagem.
     highlightProductId: "hud-essentials", // ID do produto apresentado com vídeo na home.
