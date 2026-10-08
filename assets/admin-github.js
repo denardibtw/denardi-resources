@@ -1,17 +1,17 @@
-/* O token é recebido por publicação. Não é salvo nem incluído nos arquivos. */
+/* O token é recebido pela sessão. Não é salvo nem incluído nos arquivos. */
 (() => {
   "use strict";
   const repo = "denardibtw/denardi-resources";
   const branch = "main";
   const prefix = "/repos/" + repo;
-  async function request(path, options = {}, token = "") {
+  async function request(path, options = {}, token = "", account = false) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 45000);
     try {
       const headers = { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2026-03-10" };
       if (token) headers.Authorization = "Bearer " + token;
       if (options.body) headers["Content-Type"] = "application/json";
-      const response = await fetch("https://api.github.com" + prefix + path, {
+      const response = await fetch("https://api.github.com" + (account ? "" : prefix) + path, {
         method: options.method || "GET", headers, cache: "no-store",
         body: options.body ? JSON.stringify(options.body) : undefined, signal: controller.signal,
       });
@@ -38,10 +38,28 @@
     const raw = atob(value.replace(/\s/g, ""));
     return new TextDecoder().decode(Uint8Array.from(raw, (char) => char.charCodeAt(0)));
   }
-  async function published(token = "") {
+  async function catalogFile(token = "") {
     const file = await request("/contents/assets/data.js?ref=" + branch, {}, token);
     if (file.encoding !== "base64" || !file.content || !file.sha) throw new Error("O arquivo do catálogo não pôde ser lido.");
+    return file;
+  }
+  async function published(token = "") {
+    const file = await catalogFile(token);
     return { sha: file.sha, data: window.AdminModel.parseSource(decode(file.content)) };
+  }
+  async function authenticate(token) {
+    if (!token?.trim()) throw new Error("Informe seu token do GitHub para entrar.");
+    const identity = await request("/user", {}, token, true);
+    if (identity.login?.toLowerCase() !== repo.split("/")[0]) throw new Error("Este painel está disponível somente para a conta denardibtw.");
+    const access = await request("", {}, token);
+    if (access.full_name !== repo || access.permissions?.push !== true) throw new Error("O token não tem acesso de escrita ao repositório da loja.");
+    const file = await catalogFile(token);
+    const data = window.AdminModel.parseSource(decode(file.content));
+    // Reenvia o blob que já existe, com bytes idênticos. Confirma Contents: write
+    // sem criar commit, alterar arquivos ou iniciar uma publicação.
+    const probe = await request("/git/blobs", { method: "POST", body: { content: file.content.replace(/\s/g, ""), encoding: "base64" } }, token);
+    if (probe.sha !== file.sha) throw new Error("Não foi possível confirmar a permissão de publicação.");
+    return { login: identity.login, repo, catalog: { data, sha: file.sha } };
   }
   async function base64(blob) {
     const bytes = new Uint8Array(await blob.arrayBuffer());
@@ -86,5 +104,5 @@
     }
     return { data: normalized, sha: catalog.sha, commit: createdCommit.sha, url: "https://github.com/" + repo + "/commit/" + createdCommit.sha };
   }
-  window.AdminGitHub = { repo, branch, published, publish };
+  window.AdminGitHub = { repo, branch, authenticate, published, publish };
 })();

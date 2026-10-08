@@ -11,13 +11,14 @@ Os seis produtos e seis pacotes iniciais são exemplos editáveis. Nomes, preço
 ## Usar o painel
 
 1. Abra o link do **Painel** acima.
+   Cole seu token e clique em **Entrar no painel**. O GitHub confirma a conta **denardibtw**, o repositório selecionado e a permissão de escrita antes de liberar os controles. Veja a configuração do token abaixo.
 2. Em **Produtos**, escolha um item ou clique em **+ Novo produto**.
 3. Preencha título, categoria, preço, descrições e o link do seu vídeo. Há um único vídeo por produto.
 4. Em **Enviar sua thumbnail**, selecione a capa que você preparou. Em **Enviar imagens**, acrescente imagens da galeria; use as setas para ordenar. Também pode informar URLs HTTPS.
 5. Abra **Funcionalidades, requisitos e entrega** para configurar versão, tags, dependências, condições de entrega e informações adicionais.
 6. Clique em **Salvar produto** ou **Salvar rascunho**.
 7. Use **Ver prévia** para conferir a loja com o rascunho.
-8. Quando estiver pronto, clique em **Publicar** e siga a configuração abaixo.
+8. Quando estiver pronto, clique em **Publicar → Publicar no GitHub**. O acesso verificado na entrada é usado durante a sessão, sem pedir o token novamente.
 
 **Salvar rascunho** guarda alterações e imagens somente neste navegador. **Publicar** envia o catálogo e as novas imagens ao GitHub, que atualiza o site pelo Pages. A prévia não altera o que os compradores veem. Rascunhos não são sincronizados entre computadores ou navegadores; faça backup antes de limpar os dados do navegador.
 
@@ -35,21 +36,25 @@ Preserve o identificador depois de compartilhar um link. Ele cria endereços com
 
 ### Preparar a publicação direta
 
-O painel publica em **denardibtw/denardi-resources**, branch **main**. O GitHub verifica o acesso de escrita. A URL do painel não é privada: visitantes podem criar rascunhos em seus próprios navegadores, mas somente um token autorizado consegue alterar o repositório.
+O painel publica em **denardibtw/denardi-resources**, branch **main**. A tela inicial solicita um token e só libera a interface após verificar a conta proprietária e o acesso de escrita. A confirmação da permissão reenvia ao GitHub o mesmo blob do catálogo que já existe, sem criar commit, mudar arquivos ou iniciar deploy.
+
+O token fica em memória, fora dos rascunhos, backups, cookies e armazenamento do navegador. **Sair** encerra a sessão. Recarregar ou fechar a página exige um novo login; rascunhos salvos são preservados. Se o GitHub recusar a autorização durante uma operação, o painel retorna à entrada.
+
+Como o Pages serve arquivos públicos, a tela de entrada não torna o código ou o repositório privados. A proteção das alterações publicadas é aplicada pelo próprio GitHub em cada requisição. Para restringir também a entrega dos arquivos administrativos, é necessária uma camada de controle de acesso fora do Pages.
 
 1. Entre na sua conta e abra [Fine-grained personal access tokens](https://github.com/settings/personal-access-tokens/new).
 2. Escolha **denardibtw** como proprietário e uma validade curta conveniente para você.
 3. Em **Repository access**, selecione **Only select repositories** e apenas **denardi-resources**.
 4. Em **Repository permissions**, configure **Contents: Read and write**. **Metadata** permanece somente leitura. Não precisa permitir edição de workflows.
-5. Crie o token por conta própria. Cole-o somente no campo de publicação do painel; não envie pelo chat.
-6. Clique em **Publicar no GitHub**. O campo é limpo ao iniciar a operação. O token é usado durante essa publicação e não entra no rascunho, no backup ou nos arquivos da loja.
+5. Crie o token por conta própria. Cole-o somente na tela de entrada do painel; não envie pelo chat.
+6. Clique em **Entrar no painel**. O campo é limpo ao iniciar a verificação. Edite, confira a prévia e use **Publicar → Publicar no GitHub** quando estiver pronto.
 7. O painel confirma o envio e oferece um link para **Actions**. Aguarde **Publicar vitrine no GitHub Pages** concluir e abra a loja.
 
 [Guia oficial de tokens do GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
 Catálogo e imagens são enviados em uma única atualização. Os demais arquivos são preservados. Se o catálogo mudou em outra sessão, o painel interrompe a publicação para evitar sobrescrever alterações. Exporte seu rascunho, use **Carregar versão publicada** e reaplique as mudanças. Carregar a versão publicada pede confirmação quando houver um rascunho diferente da base.
 
-Se o token expirou ou não tem acesso, prepare outro. Se o envio terminou mas o site ainda não mudou, confira **Actions**: enviar ao repositório e concluir o deploy são etapas diferentes. O painel não guarda seu token para consultas posteriores.
+Se o token expirou ou não tem acesso, prepare outro e entre novamente. Se o envio terminou mas o site ainda não mudou, confira **Actions**: enviar ao repositório e concluir o deploy são etapas diferentes. O token não permanece depois de sair ou recarregar a página.
 
 ### Backup e alternativa sem token
 
@@ -149,7 +154,7 @@ denardi-resources/
     ├── app.js / media.js
     ├── styles.css / home.css / packages.css / media.css / sold.css
     ├── admin.js / admin.css
-    ├── admin-model.js / admin-storage.js / admin-github.js / admin-zip.js
+    ├── admin-model.js / admin-storage.js / admin-github.js / admin-session.js / admin-zip.js
     ├── store-preview.js
     ├── img/
     └── videos/

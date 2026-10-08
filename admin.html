@@ -10,19 +10,35 @@
   <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@1&amp;display=swap">
   <link rel="stylesheet" href="./assets/styles.css">
-  <link rel="stylesheet" href="./assets/admin.css">
+  <link rel="stylesheet" href="./assets/admin.css?v=199ec102">
   <script src="./assets/data.js" defer></script>
   <script src="./assets/media.js" defer></script>
   <script src="./assets/admin-model.js" defer></script>
   <script src="./assets/admin-storage.js" defer></script>
-  <script src="./assets/admin-github.js" defer></script>
+  <script src="./assets/admin-github.js?v=577c56a2" defer></script>
+  <script src="./assets/admin-session.js?v=d7cd5677" defer></script>
   <script src="./assets/admin-zip.js" defer></script>
-  <script src="./assets/admin.js" defer></script>
+  <script src="./assets/admin.js?v=ed2ca3a3" defer></script>
 </head>
 <body class="admin-page">
+  <main class="admin-login" id="admin-login" aria-labelledby="login-title">
+    <section class="admin-login-card">
+      <a class="admin-login-brand" href="./index.html"><img src="./assets/img/brand.svg" width="54" height="54" alt=""><span>Denardi Resources</span></a>
+      <p class="admin-eyebrow">PAINEL DA LOJA</p>
+      <h1 id="login-title">Acesso ao painel</h1>
+      <p class="admin-login-description">Entre com seu token do GitHub para gerenciar seus produtos.</p>
+      <form id="login-form"><label class="admin-field">Token de acesso<input id="login-token" type="password" autocomplete="off" spellcheck="false" required placeholder="Cole seu token do GitHub"></label><button class="admin-button primary" id="login-submit" type="submit">Entrar no painel <span aria-hidden="true">↗</span></button></form>
+      <p class="admin-login-status" id="login-status" role="status" aria-live="polite" hidden></p>
+      <p class="admin-help">O token fica somente nesta sessão. Ao sair ou recarregar, será necessário entrar novamente.</p>
+      <details class="admin-token-guide"><summary>Como configurar meu token?</summary><ol><li>Abra <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Fine-grained personal access tokens ↗</a> no GitHub.</li><li>Selecione sua conta <strong>denardibtw</strong>, uma validade curta e somente <strong>denardi-resources</strong>.</li><li>Permita <strong>Contents: Read and write</strong>. Metadata permanece somente leitura.</li><li>Gere o token por conta própria e cole no campo acima. Não envie o código pelo chat.</li></ol><p><a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" target="_blank" rel="noopener noreferrer">Guia oficial do GitHub ↗</a></p></details>
+      <a class="admin-login-store" href="./index.html">← Voltar à loja</a>
+      <noscript>Ative o JavaScript para verificar seu acesso.</noscript>
+    </section>
+  </main>
+  <div id="admin-shell" hidden>
   <header class="admin-header">
     <a class="admin-brand" href="./index.html"><img src="./assets/img/brand.svg" width="42" height="42" alt=""><span>Denardi Resources<small>Painel da loja</small></span></a>
-    <div class="admin-header-actions"><button class="admin-button" id="preview-draft">Ver prévia</button><button class="admin-button" id="save-draft">Salvar rascunho</button><button class="admin-button primary" id="open-publish">Publicar</button></div>
+    <div class="admin-header-actions"><span class="admin-session-user" id="session-user"></span><button class="admin-button" id="preview-draft">Ver prévia</button><button class="admin-button" id="save-draft">Salvar rascunho</button><button class="admin-button primary" id="open-publish">Publicar</button><button class="admin-button" id="logout">Sair</button></div>
   </header>
   <div class="admin-layout">
     <aside class="admin-sidebar">
@@ -32,7 +48,7 @@
       <div class="admin-utilities"><button id="load-published">Carregar versão publicada</button><button id="export-backup">Exportar backup e arquivos</button><label class="admin-file-link" for="import-backup">Importar backup</label><input class="sr-only" id="import-backup" type="file" accept=".zip,.json"><a href="./index.html" target="_blank" rel="noopener noreferrer">Abrir loja ↗</a></div>
     </aside>
     <main class="admin-main">
-      <div class="admin-page-heading"><div><p class="admin-eyebrow">SUA LOJA, DO SEU JEITO</p><h1 id="admin-section-title">Produtos</h1><p id="admin-section-description">Organize o catálogo, a apresentação e a disponibilidade.</p></div><button class="admin-button primary" id="add-item">+ Novo produto</button></div>
+      <div class="admin-page-heading"><div><p class="admin-eyebrow">SUA LOJA, DO SEU JEITO</p><h1 id="admin-section-title" tabindex="-1">Produtos</h1><p id="admin-section-description">Organize o catálogo, a apresentação e a disponibilidade.</p></div><button class="admin-button primary" id="add-item">+ Novo produto</button></div>
       <div class="admin-message" id="admin-message" role="status" aria-live="polite" hidden></div>
       <div id="admin-workspace"><div class="admin-loading">Carregando seu catálogo…</div></div>
       <noscript>Ative o JavaScript para usar o painel.</noscript>
@@ -42,10 +58,11 @@
     <button class="dialog-close" data-admin-close aria-label="Fechar publicação">×</button>
     <p class="admin-eyebrow">GITHUB PAGES</p><h2 id="publish-title">Publicar alterações</h2>
     <p>O catálogo e as novas imagens serão enviados juntos para <strong>denardibtw/denardi-resources</strong>. Depois, o GitHub atualiza o site.</p>
-    <form id="publish-form"><label class="admin-field">Token de acesso do GitHub<input id="github-token" type="password" autocomplete="off" spellcheck="false" required placeholder="Informe seu token de acesso"></label><p class="admin-help">O token não é salvo no navegador, no backup ou no código da loja.</p><details class="admin-token-guide"><summary>Como preparar meu acesso?</summary><ol><li>Abra <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Fine-grained personal access tokens ↗</a> no GitHub.</li><li>Escolha seu usuário como proprietário, uma validade curta e apenas o repositório <strong>denardi-resources</strong>.</li><li>Em Repository permissions, permita <strong>Contents: Read and write</strong>. Metadata permanece somente leitura.</li><li>Crie o token por conta própria e cole somente neste campo. Não envie o token pelo chat.</li></ol><p><a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" target="_blank" rel="noopener noreferrer">Guia oficial do GitHub ↗</a></p></details><button class="admin-button primary" id="publish-submit" type="submit">Publicar no GitHub</button></form>
+    <form id="publish-form"><p class="admin-help">A publicação usa o acesso verificado ao entrar no painel.</p><button class="admin-button primary" id="publish-submit" type="submit">Publicar no GitHub</button></form>
     <p class="admin-publish-status" id="publish-status" role="status" aria-live="polite"></p>
     <a class="admin-publication-link" id="publication-link" href="https://github.com/denardibtw/denardi-resources/actions" target="_blank" rel="noopener noreferrer" hidden>Acompanhar publicação no GitHub ↗</a>
   </dialog>
   <dialog class="admin-preview-dialog" id="preview-dialog" aria-labelledby="preview-title"><div class="admin-preview-header"><h2 id="preview-title">Prévia do rascunho</h2><button class="admin-button" data-admin-close>Fechar prévia</button></div><iframe id="draft-frame" title="Prévia da loja com o rascunho"></iframe></dialog>
+  </div>
 </body>
 </html>
