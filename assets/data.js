@@ -52,10 +52,10 @@ window.STORE_CATEGORIES = [
 window.STORE_PRODUCTS = [
   {
     "id": "hud-essentials",
-    "name": "HUD Essentials",
+    "name": "HUD Essentialsasdsadas",
     "category": "interfaces",
     "price": 79.9,
-    "sold": false,
+    "sold": true,
     "image": "",
     "imageAlt": "",
     "images": [],
