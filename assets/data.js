@@ -1,6 +1,7 @@
 /* EDITE ESTE ARQUIVO para personalizar a loja. Não exige build nem backend.
  * Os produtos, preços, características e vídeos abaixo são exemplos.
- * Troque tudo pelo conteúdo real antes de desativar demoMode.
+ * demoMode controla apenas avisos e etiquetas de demonstração na interface.
+ * Personalize os dados abaixo com suas ofertas reais antes de divulgá-las.
  * Vídeos: YouTube, Vimeo ou caminho relativo de arquivo .mp4/.webm/.ogv.
  * Os clipes incluídos são animações ilustrativas, não gravações de resources reais.
  * THUMBNAILS: você fornece a imagem. Em image, use ./assets/img/sua-thumbnail.webp.
@@ -15,7 +16,7 @@ window.STORE_CONFIG = {
   packagesTitle: "Pacotes",
   pageTitle: "Denardi Resources",
   description: "Denardi Resources: resources e pacotes para MTA:SA. Explore os produtos, assista aos vídeos e fale com denardi para comprar.",
-  demoMode: true,
+  demoMode: false,
   currency: "BRL",
   locale: "pt-BR",
   // Contato para compra: perfil, nome de usuário e ID do Discord.
@@ -108,7 +109,7 @@ window.STORE_PACKAGES = [
     id: "inicial", name: "Pacote Inicial", price: 229.90, license: "open",
     includedProducts: ["hud-essentials", "login-flow", "inventario-grid"],
     image: "", imageAlt: "", images: [],
-    description: "Entrada, HUD e inventário em uma coleção demonstrativa de três resources.",
+    description: "Entrada, HUD e inventário reunidos em uma coleção de três resources.",
     longDescription: "Exemplo de oferta com HUD Essentials, Login Flow e Inventário Grid. Personalize a composição e descreva a experiência real de cada componente antes de divulgar este pacote. A economia exibida compara os preços demonstrativos do catálogo.",
     features: ["Três propostas de interface e sistema", "Personalização de marca a confirmar"],
     requirements: ["Integração com contas e sistema de itens", "Confira os requisitos individuais antes da compra"],
