@@ -8,6 +8,7 @@
   let data = M.clone(seed), baseData = M.clone(seed), baseSha = null;
   let files = new Map(), urls = new Map(), section = "products", selected = 0, dirty = false, busy = false;
   let authPending = false;
+  let publicationSequence = 0;
   const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
   const titles = { products: "Produtos", packages: "Pacotes", categories: "Categorias", store: "Loja e home" };
   function message(text, type = "") {
@@ -266,7 +267,7 @@
         changed(); render();
       } else if (button.id === "save-draft") { await save(); itemListIfPresent(); message("Rascunho salvo neste navegador.", "success"); }
       else if (button.id === "preview-draft") { await save(); $("#draft-frame").src = "./index.html?preview=admin"; $("#preview-dialog").showModal(); }
-      else if (button.id === "open-publish") { await save(); $("#publish-status").textContent = ""; $("#publication-link").hidden = true; $("#publish-dialog").showModal(); $("#publish-submit").focus(); }
+      else if (button.id === "open-publish") { await save(); publicationSequence++; $("#publish-status").textContent = ""; $("#publication-link").hidden = true; $("#published-store-link").hidden = true; $("#publish-dialog").showModal(); $("#publish-submit").focus(); }
       else if (button.id === "export-backup") await backup();
       else if (button.id === "load-published") {
         if ((dirty || JSON.stringify(M.normalize(data)) !== JSON.stringify(M.normalize(baseData))) && !confirm("Carregar o catálogo publicado no lugar do rascunho? Exporte um backup para preservar suas alterações.")) return;
@@ -306,6 +307,7 @@
     if (!session.signedIn()) return;
     if (event.target.id !== "publish-form") return guard(async () => { await save(); itemListIfPresent(); message("Rascunho salvo.", "success"); });
     if (busy) return;
+    const publication = ++publicationSequence;
     setBusy(true);
     (async () => {
       try {
@@ -314,9 +316,10 @@
         data = result.data; baseData = M.clone(result.data); baseSha = result.sha;
         await window.AdminStorage.write({ data, baseData, baseSha, files: [...files], savedAt: Date.now() });
         dirty = false; $("#draft-state").textContent = "Publicado no GitHub";
-        $("#publish-status").textContent = "Alterações enviadas. O GitHub Pages está atualizando a loja. Acompanhe a conclusão pelo link abaixo.";
+        $("#publish-status").textContent = "Catálogo salvo no GitHub. Aguardando a atualização da loja…";
         $("#publication-link").hidden = false;
         render(); message("Catálogo e imagens enviados ao GitHub.", "success");
+        watchDeployment(result, publication);
       } catch (error) {
         if (!session.signedIn()) lock(error.message);
         else $("#publish-status").textContent = error.message || "Não foi possível publicar.";
@@ -334,6 +337,7 @@
   }
   function lock(reason = "") {
     session.logout();
+    publicationSequence++;
     for (const id of ["#publish-dialog", "#preview-dialog"]) if ($(id).open) $(id).close();
     $("#draft-frame").src = "about:blank";
     $("#admin-shell").hidden = true; $("#admin-login").hidden = false;
@@ -343,6 +347,21 @@
     files = new Map(); urls = new Map(); data = M.clone(seed); baseData = M.clone(seed); baseSha = null;
     section = "products"; selected = 0; message("");
     loginStatus(reason, Boolean(reason)); $("#login-token").focus();
+  }
+  async function watchDeployment(result, publication) {
+    const isCurrent = () => publication === publicationSequence && session.signedIn();
+    try {
+      const ready = await window.AdminDeployment.waitForCatalog({ sha: result.sha, commit: result.commit, isCurrent });
+      if (!isCurrent()) return;
+      if (ready) {
+        $("#publish-status").textContent = "Publicação concluída. Sua loja já está atualizada.";
+        const url = new URL("./index.html", location.href);
+        url.searchParams.set("v", result.commit); url.hash = "catalogo";
+        $("#published-store-link").href = url.href; $("#published-store-link").hidden = false;
+      } else $("#publish-status").textContent = "Catálogo salvo no GitHub. A publicação está demorando; acompanhe o andamento pelo link abaixo.";
+    } catch {
+      if (isCurrent()) $("#publish-status").textContent = "Catálogo salvo no GitHub. Confira a conclusão da publicação pelo link abaixo.";
+    }
   }
   async function signIn() {
     if (authPending) return;
