@@ -1,8 +1,13 @@
-# Denardi Dev - Resources MTA:SA
+# Denardi Resources
+
+**Site:** https://denardibtw.github.io/denardi-resources/  
+**Repositório:** https://github.com/denardibtw/denardi-resources
+
+O endereço do GitHub Pages acompanha o novo nome do repositório. Compartilhe o link acima; o antigo endereço `/denardidev/` não redireciona automaticamente no Pages. O projeto usa caminhos relativos e continua funcionando em qualquer subpasta. O ZIP atualizado se chama `denardi-resources.zip` e contém a pasta `denardi-resources`.
 
 Uma loja/portfólio em português, com catálogo escuro inspirado na composição da [referência indicada](https://www.vames-store.com/category/2092562), visual responsivo, seis produtos demonstrativos, quatro categorias, busca, filtros por apresentação com ou sem vídeo, ordenação, detalhes em modal com vídeo em destaque, carrossel com vídeo primeiro e várias imagens, links individuais e contato pelo perfil do Discord de denardi. Não há checkout, backend, pagamentos ou cadastro de clientes.
 
-**A loja usa o nome Denardi Dev - Resources MTA:SA. Os produtos, preços, funcionalidades e previews são demonstrativos.** Os clipes são ilustrações originais, não capturas de resources reais em execução. As thumbnails serão fornecidas por você; enquanto não forem adicionadas, aparece um espaço reservado neutro. Substitua o conteúdo antes de divulgar como sua loja.
+**A loja usa o nome Denardi Resources. Os produtos, preços, funcionalidades e previews são demonstrativos.** Os clipes são ilustrações originais, não capturas de resources reais em execução. As thumbnails serão fornecidas por você; enquanto não forem adicionadas, aparece um espaço reservado neutro. Substitua o conteúdo antes de divulgar como sua loja.
 
 ## 1. Abrir a loja
 
@@ -22,7 +27,7 @@ O arquivo principal para edição é **`assets/data.js`**. Você pode editar pel
 
 ### Home e catálogo
 
-A página inicial segue a composição da [home de referência](https://www.vames-store.com/): fundo de cidade, título centralizado, faixa com quatro benefícios, produto em destaque com vídeo e três cards. Os textos foram adaptados para Denardi Dev e MTA:SA. Não há estatísticas de vendas nem compradores inventados.
+A página inicial segue a composição da [home de referência](https://www.vames-store.com/): fundo de cidade, título centralizado, faixa com quatro benefícios, produto em destaque com vídeo e três cards. Os textos foram adaptados para Denardi Resources e MTA:SA. Não há estatísticas de vendas nem compradores inventados.
 
 Em `STORE_CONFIG.home`, personalize `welcome`, `title`, `description`, `heroImage`, `highlightProductId`, `highlightLabel` e `featuredProductIds`. Use IDs de produtos existentes em `highlightProductId` e `featuredProductIds`. O produto em destaque utiliza o primeiro vídeo configurado nele; os três cards também abrem os detalhes com carrossel.
 
@@ -193,7 +198,7 @@ Esta opção não exige terminal nem GitHub Actions personalizado. GitHub Pages 
 
 1. Acesse sua conta no GitHub e escolha **New repository**.
 2. Dê um nome, por exemplo `mta-resources`, escolha **Public** e crie o repositório.
-3. Extraia o ZIP entregue. Entre na pasta `nexo-store`: o arquivo `index.html` deve ficar na raiz do repositório, não dentro de outra pasta `nexo-store`.
+3. Extraia o ZIP entregue. Entre na pasta `denardi-resources`: o arquivo `index.html` deve ficar na raiz do repositório, não dentro de outra pasta `denardi-resources`.
 4. Em **Add file → Upload files**, envie `index.html`, a pasta `assets/` e `README.md`. Confirme em **Commit changes**. A pasta `assets` deve manter sua estrutura interna.
 5. Crie também o arquivo vazio `.nojekyll` na raiz em **Add file → Create new file** e confirme a alteração. Esse arquivo já existe no ZIP, mas pode ficar oculto na seleção de arquivos do seu computador.
 6. Para esta opção, não envie `.github/workflows/deploy-pages.yml`. Se já enviou, remova esse arquivo antes de usar publicação por branch.
@@ -206,7 +211,7 @@ O endereço de um projeto normalmente é `https://SEU-USUARIO.github.io/mta-reso
 
 O projeto inclui `.github/workflows/deploy-pages.yml`. Ele publica somente `index.html`, `.nojekyll` e `assets/` quando você atualiza a branch `main`. Não há etapa de instalação ou compilação.
 
-1. Envie **todo o conteúdo** de `nexo-store` para a raiz do repositório, incluindo `.github/workflows/deploy-pages.yml` e `.nojekyll`. Não envie a pasta externa que contém o projeto.
+1. Envie **todo o conteúdo** de `denardi-resources` para a raiz do repositório, incluindo `.github/workflows/deploy-pages.yml` e `.nojekyll`. Não envie a pasta externa que contém o projeto.
 2. Se a pasta `.github` não aparecer no upload, use **Add file → Create new file**, informe `.github/workflows/deploy-pages.yml` e copie exatamente o conteúdo do arquivo entregue.
 3. Em **Settings → Pages → Source**, escolha **GitHub Actions**.
 4. Em **Actions**, selecione **Publicar vitrine no GitHub Pages** e clique em **Run workflow → Run workflow**. Depois disso, cada alteração enviada para `main` publica uma nova versão automaticamente.
@@ -216,7 +221,7 @@ Se a branch principal tiver outro nome, altere `branches: [main]` no workflow pa
 
 ### Alternativa com Git (opcional)
 
-Se já usa Git, abra o terminal na pasta `nexo-store`, crie um repositório vazio no GitHub e substitua os nomes abaixo antes de executar:
+Se já usa Git, abra o terminal na pasta `denardi-resources`, crie um repositório vazio no GitHub e substitua os nomes abaixo antes de executar:
 
 ```sh
 git init
@@ -253,7 +258,7 @@ Se a página mostrar 404, confira **Settings → Pages**, o término do deploy e
 ## Estrutura do projeto
 
 ```text
-nexo-store/
+denardi-resources/
 ├── index.html
 ├── README.md
 ├── .nojekyll
